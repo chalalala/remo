@@ -38,3 +38,4 @@ draft/
 
 extension/*
 !extension/manifest.json
+!extension/icons/
