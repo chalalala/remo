@@ -1,0 +1,10 @@
+{
+	"name": "REMO",
+	"description": "A simple resource manager",
+	"version": "0.0.1",
+	"manifest_version": 3,
+	"action": {
+		"default_title": "REMO",
+		"default_popup": "index.html"
+	}
+}

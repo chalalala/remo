@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && mkdir -p ./extension && mv out/_next out/next && sed -i 's/\\/_next/\\.\\/next/g' out/**.html && mv out/index.html ./extension/ && rsync -va --delete-after out/next/ ./extension/next/ && rm -rf out && rsync -va --delete-after public/next-assets ./extension/",
     "start": "next start",
     "lint": "next lint"
   },
@@ -17,6 +17,7 @@
     "eslint-config-next": "13.5.2",
     "next": "13.5.2",
     "postcss": "8.4.30",
+    "prettier-plugin-tailwindcss": "^0.5.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "tailwindcss": "3.3.3",
