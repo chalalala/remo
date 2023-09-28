@@ -1,3 +1,148 @@
 {
-  "extends": "next/core-web-vitals"
+  "parser": "@typescript-eslint/parser",
+  "ignorePatterns": ["**/*.js"],
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "jsx": true
+  },
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "plugin:react-hooks/recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+    "prettier"
+  ],
+  "plugins": ["testing-library"],
+  "env": {
+    "jest": true
+  },
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "bracketSpacing": true,
+        "bracketSameLine": false,
+        "jsxSingleQuote": false,
+        "printWidth": 100,
+        "proseWrap": "always",
+        "semi": true,
+        "singleQuote": true,
+        "tabWidth": 2,
+        "trailingComma": "all",
+        "htmlWhitespaceSensitivity": "ignore",
+        "arrowParens": "always",
+        "endOfLine": "auto",
+        "singleAttributePerLine": true
+      }
+    ],
+    "max-params": ["warn", 5],
+    "max-nested-callbacks": ["warn", 3],
+    "max-lines": ["warn", { "max": 300, "skipComments": true, "skipBlankLines": true }],
+    "max-depth": ["warn", { "max": 4 }],
+    "@typescript-eslint/ban-ts-comment": "off",
+    "no-console": ["error"],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "args": "after-used",
+        "ignoreRestSiblings": true
+      }
+    ],
+    "no-undef": ["error"],
+    "comma-dangle": ["error", "only-multiline"],
+    "object-shorthand": "error",
+    "space-before-blocks": "error",
+    "space-infix-ops": "error",
+    "padding-line-between-statements": "off",
+    "@typescript-eslint/padding-line-between-statements": [
+      "error",
+      {
+        "blankLine": "always",
+        "prev": "*",
+        "next": ["block", "block-like"]
+      },
+      {
+        "blankLine": "always",
+        "prev": ["block", "block-like"],
+        "next": "*"
+      },
+      {
+        "blankLine": "always",
+        "prev": ["const", "let", "var"],
+        "next": "*"
+      },
+      {
+        "blankLine": "any",
+        "prev": ["const", "let", "var"],
+        "next": ["const", "let", "var"]
+      },
+      {
+        "blankLine": "always",
+        "prev": ["import"],
+        "next": "*"
+      },
+      {
+        "blankLine": "any",
+        "prev": ["import"],
+        "next": ["import"]
+      }
+    ],
+    "object-curly-spacing": ["error", "always"],
+    "array-bracket-spacing": ["error", "never"],
+    "eol-last": ["error", "always"],
+    "one-var": ["error", "never"],
+    "no-new-object": "error",
+    "quote-props": ["error", "as-needed"],
+    "newline-before-return": "error",
+    "camelcase": ["error", { "properties": "never" }],
+    "curly": "error",
+    "no-else-return": ["error", { "allowElseIf": false }],
+    "no-param-reassign": "error",
+    "prefer-arrow-callback": "warn",
+    "no-duplicate-imports": "error",
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "react-i18next",
+            "importNames": ["useTranslation"],
+            "message": "Import useTranslation from next-i18next instead."
+          }
+        ]
+      }
+    ],
+    "no-useless-concat": "error",
+    "array-callback-return": "error",
+    "import/no-mutable-exports": "error",
+    "import/first": "error",
+    "arrow-parens": ["error", "always"],
+    "no-confusing-arrow": "error",
+    "no-unneeded-ternary": "error",
+    "no-nested-ternary": "warn",
+    "no-const-assign": "error",
+    "no-multi-assign": "error",
+    "dot-notation": "off",
+    "@typescript-eslint/dot-notation": "warn",
+    "eqeqeq": "error",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/react-in-jsx-scope": "off",
+    "react/display-name": "off",
+    "react/no-deprecated": "off",
+    "prefer-const": "warn",
+    "react/prop-types": "off",
+    "react/jsx-boolean-value": ["error", "never"],
+    "react/jsx-no-leaked-render": [2, { "validStrategies": ["ternary"] }],
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [".ts", ".tsx"]
+      }
+    ]
+  }
 }
