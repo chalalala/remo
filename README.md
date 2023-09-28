@@ -1,4 +1,4 @@
-# REMO <img width="32" alt="icon32" src="https://github.com/chalalala/remo/assets/49138712/af0e6dce-8c15-46f0-bd89-57e4b97828b4">
+# REMO <img width="32" alt="icon32" src="https://github.com/chalalala/remo/assets/49138712/827e9365-18fd-415b-9ade-01029324a0ea">
 
 Simple extension to manage project resources
 
