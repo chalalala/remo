@@ -36,6 +36,4 @@ next-env.d.ts
 
 draft/
 
-extension/*
-!extension/manifest.json
-!extension/icons/
+extension/

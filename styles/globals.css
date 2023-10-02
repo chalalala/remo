@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-roboto: 'Roboto', sans-serif;
+  }
+
+  body {
+    @apply font-roboto text-sm text-gray-900;
+  }
+}
