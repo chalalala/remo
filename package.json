@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && npm run lint:build",
-    "lint:build": "mv out/_next out/assets && sed -i 's/\\/_next/\\/assets/g' out/**.html && rsync -va --delete-after out/ ./extension/ && rm -rf out",
+    "lint:build": "mv out/_next out/assets && sed -i -e 's+/_next+./assets+g' out/**.html && rsync -va --delete-after out/ ./extension/ && rm -rf out",
     "start": "next start",
     "test": "jest --verbose",
     "format": "prettier -c --write \"**/*.{css,json,md,ts,tsx}\"",
