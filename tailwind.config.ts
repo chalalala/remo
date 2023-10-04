@@ -11,6 +11,11 @@ const config: Config = {
       fontFamily: {
         roboto: ['var(--font-roboto)'],
       },
+      colors: {
+        indigo: {
+          10: 'F9FAFF',
+        },
+      },
     },
   },
   plugins: [],
