@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { Layout } from '@/components/Layout';
 import { NextPageWithLayout } from './_app';
+import { SectionList } from '@/components/SectionList';
 
 const Home: NextPageWithLayout = () => {
   return (
@@ -18,7 +19,7 @@ const Home: NextPageWithLayout = () => {
       </Head>
 
       <div className="px-6 py-4">
-        <p className="text-sm">No section existed.</p>
+        <SectionList />
       </div>
     </>
   );
