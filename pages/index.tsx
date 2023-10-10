@@ -1,8 +1,8 @@
-import { roboto } from '@/constants/typography';
-import clsx from 'clsx';
 import Head from 'next/head';
+import { Layout } from '@/components/Layout';
+import { NextPageWithLayout } from './_app';
 
-export default function Home() {
+const Home: NextPageWithLayout = () => {
   return (
     <>
       <Head>
@@ -17,9 +17,13 @@ export default function Home() {
         />
       </Head>
 
-      <div className={clsx('mx-auto flex w-[480px] max-w-full', roboto.variable)}>
-        <button onClick={() => alert('Hello')}>Click me</button>
+      <div className="px-6 py-4">
+        <p className="text-sm">No section existed.</p>
       </div>
     </>
   );
-}
+};
+
+Home.getLayout = (page) => <Layout>{page}</Layout>;
+
+export default Home;
