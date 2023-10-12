@@ -34,7 +34,7 @@ export const EditableAccordion: FC<Props> = ({
     setEditingTitle(event.target.value);
   };
 
-  const onBlurInput = () => {
+  const onSubmitChanges = () => {
     setIsEditing(false);
 
     if (typeof onChangeTitle === 'function') {
@@ -66,13 +66,18 @@ export const EditableAccordion: FC<Props> = ({
             })}
           />
           {isEditing ? (
-            <input
-              className="h-full w-full border-b border-b-gray-700 outline-none"
-              value={editingTitle}
-              onChange={onChangeInput}
-              onBlur={onBlurInput}
-              autoFocus
-            />
+            <form
+              onSubmit={onSubmitChanges}
+              className="h-full w-full"
+            >
+              <input
+                className="h-full w-full border-b border-b-gray-700 outline-none"
+                value={editingTitle}
+                onChange={onChangeInput}
+                onBlur={onSubmitChanges}
+                autoFocus
+              />
+            </form>
           ) : (
             <span
               className="mb-px h-full w-full truncate"
