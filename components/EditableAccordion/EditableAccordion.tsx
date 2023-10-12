@@ -56,7 +56,7 @@ export const EditableAccordion: FC<Props> = ({
           'flex list-none items-center justify-between gap-4',
           'cursor-pointer select-none',
         )}
-        title={title}
+        title={editingTitle}
         onClick={onSummaryClick}
       >
         <div className="flex h-5 min-w-0 flex-1 items-center gap-2">
@@ -78,7 +78,7 @@ export const EditableAccordion: FC<Props> = ({
               className="mb-px h-full w-full truncate"
               onDoubleClick={onDoubleClickText}
             >
-              {title}
+              {editingTitle}
             </span>
           )}
         </div>
