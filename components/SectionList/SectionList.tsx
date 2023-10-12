@@ -1,10 +1,12 @@
 import { FC, useState } from 'react';
 import { EditableAccordion } from '../EditableAccordion';
+import { renameSection } from '@/utils/sectionList';
+import { Section } from '@/types/Resource';
 
 interface Props {}
 
 export const SectionList: FC<Props> = () => {
-  const [sections, setSections] = useState(() => [
+  const [sections, setSections] = useState<Section[]>(() => [
     {
       id: 'test',
       name: 'Item with a very very very very very very very very very very very very long name',
@@ -13,16 +15,7 @@ export const SectionList: FC<Props> = () => {
   ]);
 
   const onChange = (sectionId: string, value: string) => {
-    const newSections = sections.map((section) => {
-      if (section.id === sectionId) {
-        return {
-          ...section,
-          name: value,
-        };
-      }
-
-      return section;
-    });
+    const newSections = renameSection(sections, sectionId, value);
 
     setSections(newSections);
   };
