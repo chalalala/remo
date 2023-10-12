@@ -18,7 +18,7 @@ const Home: NextPageWithLayout = () => {
         />
       </Head>
 
-      <div className="px-6 py-4">
+      <div className="px-6 pt-4">
         <SectionList />
       </div>
     </>

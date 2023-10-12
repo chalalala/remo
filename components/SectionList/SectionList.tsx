@@ -2,11 +2,32 @@ import { FC, useState } from 'react';
 import { EditableAccordion } from '../EditableAccordion';
 import { renameSection } from '@/utils/sectionList';
 import { Section } from '@/types/Resource';
+import { Button, ButtonVariant } from '../Button';
 
 interface Props {}
 
 export const SectionList: FC<Props> = () => {
   const [sections, setSections] = useState<Section[]>(() => [
+    {
+      id: 'test',
+      name: 'Item with a very very very very very very very very very very very very long name',
+      items: [],
+    },
+    {
+      id: 'test',
+      name: 'Item with a very very very very very very very very very very very very long name',
+      items: [],
+    },
+    {
+      id: 'test',
+      name: 'Item with a very very very very very very very very very very very very long name',
+      items: [],
+    },
+    {
+      id: 'test',
+      name: 'Item with a very very very very very very very very very very very very long name',
+      items: [],
+    },
     {
       id: 'test',
       name: 'Item with a very very very very very very very very very very very very long name',
@@ -35,6 +56,15 @@ export const SectionList: FC<Props> = () => {
           <div className="mt-2.5">Content</div>
         </EditableAccordion>
       ))}
+
+      <div className="sticky bottom-0 bg-white py-4">
+        <Button
+          variant={ButtonVariant.DASHED}
+          className="w-full"
+        >
+          Add section
+        </Button>
+      </div>
     </div>
   );
 };
