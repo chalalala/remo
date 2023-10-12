@@ -1,4 +1,5 @@
 import { Section } from '@/types/Resource';
+import { generateId } from './string';
 
 /**
  * Renames a section in the given array of sections.
@@ -20,4 +21,27 @@ export const renameSection = (sections: Section[], sectionId: string, value: str
   });
 
   return newSections;
+};
+
+/**
+ * Adds a new section to the list of sections.
+ * @param sections - The list of sections to add the new section to.
+ * @param name - The name of the new section.
+ * @returns A new list of sections with the new section added.
+ */
+export const addSection = (sections: Section[], name: string) => {
+  let id = generateId();
+
+  // Generate a new ID if the ID already exists
+  while (sections.some((section) => section.id === id)) {
+    id = generateId();
+  }
+
+  const newSection = {
+    id,
+    name,
+    items: [],
+  };
+
+  return [...sections, newSection];
 };

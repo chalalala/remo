@@ -5,6 +5,7 @@ import { IconButton } from '../IconButton';
 
 interface Props extends PropsWithChildren {
   defaultOpen?: boolean;
+  defaultEditing?: boolean;
   title: string;
   onChangeTitle?: (newTitle: string) => void;
 }
@@ -12,11 +13,12 @@ interface Props extends PropsWithChildren {
 export const EditableAccordion: FC<Props> = ({
   children,
   defaultOpen = true,
+  defaultEditing = false,
   title,
   onChangeTitle,
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(defaultEditing);
   const [editingTitle, setEditingTitle] = useState(title);
 
   const onToggleDetails = (event: SyntheticEvent<HTMLDetailsElement, Event>) => {
