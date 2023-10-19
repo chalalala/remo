@@ -1,21 +1,29 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { EditableAccordion } from '../EditableAccordion';
-import { addSection, renameSection } from '@/utils/sectionList';
-import { Section } from '@/types/Resource';
+import { Section as SectionType } from '@/types/Resource';
 import { Button, ButtonVariant } from '../Button';
 import { scrollToBottom } from '@/utils/dom';
+import { Section } from '../Section';
+import { DropResult } from 'react-beautiful-dnd';
+import { addSection, renameSection } from '@/utils/sectionList';
+import { useAppContext } from '@/context/AppContext';
+import dynamic from 'next/dynamic';
+
+// Disables loading react-beautiful-dnd modules in the SSR mode
+// to fix `data-rbd-draggable-context-id` did not match
+const DragDropContext = dynamic(
+  () =>
+    import('react-beautiful-dnd').then((mod) => {
+      return mod.DragDropContext;
+    }),
+  { ssr: false },
+);
 
 interface Props {}
 
 export const SectionList: FC<Props> = () => {
   const listRef = useRef<HTMLDivElement>(null);
-  const [sections, setSections] = useState<Section[]>(() => [
-    {
-      id: 'test',
-      name: 'Item with a very very very very very very very very very very very very long name',
-      items: [],
-    },
-  ]);
+  const { sections, setSections } = useAppContext();
   const [newSectionName, setNewSectionName] = useState<string | null>(null);
 
   const openAddNewSection = () => {
@@ -41,6 +49,30 @@ export const SectionList: FC<Props> = () => {
     setSections(newSections);
   };
 
+  const onDragEnd = (result: DropResult) => {
+    const modifiedSections: SectionType[] = JSON.parse(JSON.stringify(sections));
+
+    if (!result.destination) {
+      return;
+    }
+
+    const sourceSectionIdx = modifiedSections.findIndex(
+      (section) => section.id === result.source.droppableId,
+    );
+    const destinationSectionIdx = modifiedSections.findIndex(
+      (section) => section.id === result.destination?.droppableId,
+    );
+
+    const draggedItem = modifiedSections[sourceSectionIdx].items.splice(
+      result.source.index,
+      1,
+    )?.[0];
+
+    modifiedSections[destinationSectionIdx].items.splice(result.destination.index, 0, draggedItem);
+
+    setSections(modifiedSections);
+  };
+
   // Pin scroll to the bottom
   useEffect(() => {
     if (listRef.current) {
@@ -53,37 +85,37 @@ export const SectionList: FC<Props> = () => {
   }
 
   return (
-    <div
-      className="space-y-4"
-      ref={listRef}
-    >
-      {sections.map((section) => (
-        <EditableAccordion
-          key={section.id}
-          title={section.name}
-          onChangeTitle={(newTitle) => onRenameSection(section.id, newTitle)}
-        >
-          <div className="mt-2.5">Content</div>
-        </EditableAccordion>
-      ))}
+    <DragDropContext onDragEnd={onDragEnd}>
+      <div
+        className="space-y-4"
+        ref={listRef}
+      >
+        {sections.map((section) => (
+          <Section
+            key={section.id}
+            section={section}
+            onChangeTitle={onRenameSection}
+          />
+        ))}
 
-      {typeof newSectionName === 'string' ? (
-        <EditableAccordion
-          title={newSectionName}
-          defaultEditing
-          onChangeTitle={onChangeNewSection}
-        />
-      ) : null}
+        {typeof newSectionName === 'string' ? (
+          <EditableAccordion
+            title={newSectionName}
+            defaultEditing
+            onChangeTitle={onChangeNewSection}
+          />
+        ) : null}
 
-      <div className="sticky bottom-0 bg-white py-4">
-        <Button
-          variant={ButtonVariant.DASHED}
-          onClick={openAddNewSection}
-          className="w-full"
-        >
-          Add section
-        </Button>
+        <div className="sticky bottom-0 bg-white py-4">
+          <Button
+            variant={ButtonVariant.DASHED}
+            onClick={openAddNewSection}
+            className="w-full"
+          >
+            Add section
+          </Button>
+        </div>
       </div>
-    </div>
+    </DragDropContext>
   );
 };

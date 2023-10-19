@@ -38,7 +38,7 @@ export const addSection = (sections: Section[], name: string) => {
   }
 
   const newSection = {
-    id,
+    id: `section_${id}`,
     name,
     items: [],
   };
