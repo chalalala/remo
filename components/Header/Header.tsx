@@ -9,7 +9,7 @@ interface Props {
 export const Header: FC<Props> = ({ variant = 'default' }) => {
   if (variant === 'minimal') {
     return (
-      <header className="flex justify-end bg-indigo-500 p-4 text-white">
+      <header className="sticky top-0 flex justify-end bg-indigo-500 p-4 text-white">
         <IconButton>
           <XIcon className="h-4 w-4 text-inherit" />
         </IconButton>
@@ -18,7 +18,7 @@ export const Header: FC<Props> = ({ variant = 'default' }) => {
   }
 
   return (
-    <header className="flex items-center gap-4 bg-indigo-500 p-4 text-white">
+    <header className="sticky top-0 z-50 flex items-center gap-4 bg-indigo-500 p-4 text-white">
       <div className="flex items-center">
         <FolderIcon className="mx-2 h-5 w-5" />
         <span className="text-sm font-medium uppercase">Space</span>

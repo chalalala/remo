@@ -1,4 +1,4 @@
-import { renameSection } from '../sectionList';
+import { addSection, renameSection } from '../sectionList';
 
 describe('renameSection', () => {
   it('should rename the section with the given ID', () => {
@@ -33,5 +33,32 @@ describe('renameSection', () => {
     const newSections = renameSection(mockSections, 'not-exists', 'New Name');
 
     expect(newSections).toEqual(mockSections);
+  });
+});
+
+describe('addSection', () => {
+  it('should add a new section to the list', () => {
+    const mockSections = [
+      {
+        id: '1',
+        name: 'Section 1',
+        items: [],
+      },
+    ];
+
+    const newSections = addSection(mockSections, 'Section 2');
+
+    expect(newSections).toEqual([
+      {
+        id: '1',
+        name: 'Section 1',
+        items: [],
+      },
+      {
+        id: expect.any(String),
+        name: 'Section 2',
+        items: [],
+      },
+    ]);
   });
 });

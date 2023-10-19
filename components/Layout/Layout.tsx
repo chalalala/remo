@@ -11,7 +11,7 @@ export const Layout: FC<Props> = ({ children, type = 'main' }) => {
   return (
     <div
       className={clsx(
-        'mx-auto w-[480px] max-w-full overflow-hidden rounded shadow-md',
+        'mx-auto max-h-96 w-[480px] max-w-full overflow-hidden overflow-y-auto rounded shadow-md',
         roboto.variable,
       )}
     >
