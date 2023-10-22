@@ -1,11 +1,10 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { EditableAccordion } from '../EditableAccordion';
-import { Section as SectionType } from '@/types/Resource';
 import { Button, ButtonVariant } from '../Button';
 import { scrollToBottom } from '@/utils/dom';
 import { Section } from '../Section';
 import { DropResult } from 'react-beautiful-dnd';
-import { addSection, renameSection } from '@/utils/sectionList';
+import { addSection, renameSection, reorderItems } from '@/utils/sectionList';
 import { useAppContext } from '@/context/AppContext';
 import dynamic from 'next/dynamic';
 
@@ -50,25 +49,11 @@ export const SectionList: FC<Props> = () => {
   };
 
   const onDragEnd = (result: DropResult) => {
-    const modifiedSections: SectionType[] = JSON.parse(JSON.stringify(sections));
-
     if (!result.destination) {
-      return;
+      return sections;
     }
 
-    const sourceSectionIdx = modifiedSections.findIndex(
-      (section) => section.id === result.source.droppableId,
-    );
-    const destinationSectionIdx = modifiedSections.findIndex(
-      (section) => section.id === result.destination?.droppableId,
-    );
-
-    const draggedItem = modifiedSections[sourceSectionIdx].items.splice(
-      result.source.index,
-      1,
-    )?.[0];
-
-    modifiedSections[destinationSectionIdx].items.splice(result.destination.index, 0, draggedItem);
+    const modifiedSections = reorderItems(sections, result);
 
     setSections(modifiedSections);
   };
