@@ -7,14 +7,20 @@ import { Draggable, Droppable } from 'react-beautiful-dnd';
 interface Props {
   section: SectionType;
   onChangeTitle: (sectionId: string, value: string) => void;
+  onRemoveSection: (sectionId: string) => void;
+  onAddItem: (sectionId: string, value: string) => void;
 }
 
-export const Section: FC<Props> = ({ section, onChangeTitle }) => {
+export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection, onAddItem }) => {
   return (
     <EditableAccordion
       key={section.id}
       title={section.name}
+      addBtnTitle="Add item"
+      removeBtnTitle="Remove section"
       onChangeTitle={(value) => onChangeTitle(section.id, value)}
+      onRemove={() => onRemoveSection(section.id)}
+      onAdd={() => onAddItem(section.id, 'Test')}
     >
       <Droppable droppableId={section.id}>
         {(provided) => (
