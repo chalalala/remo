@@ -1,7 +1,8 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC } from 'react';
 import { Image } from '../Image';
 import { IconButton } from '../IconButton';
 import { LinkIcon, PencilIcon, TrashIcon } from '@heroicons/react/solid';
+import { DraggableItemTextWrapper } from './DraggableItemTextWrapper';
 
 interface Props {
   text: string;
@@ -10,17 +11,6 @@ interface Props {
 }
 
 export const DraggableItem: FC<Props> = ({ text, icon, url }) => {
-  const Wrapper = url
-    ? ({ children, ...props }: PropsWithChildren) => (
-        <a
-          href={url}
-          {...props}
-        >
-          {children}
-        </a>
-      )
-    : 'span';
-
   return (
     <div className="flex min-w-0 items-center gap-2 show-child-on-hover">
       <span className="shrink-0">
@@ -45,12 +35,13 @@ export const DraggableItem: FC<Props> = ({ text, icon, url }) => {
             )}
           </IconButton>
 
-          <Wrapper
+          <DraggableItemTextWrapper
             className="flex-1 truncate text-sm"
             title={text}
+            url={url}
           >
             {text}
-          </Wrapper>
+          </DraggableItemTextWrapper>
         </div>
 
         <div className="shrink-0 items-center leading-none child">
