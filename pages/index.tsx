@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { Layout } from '@/components/Layout';
 import { NextPageWithLayout } from './_app';
 import { SectionList } from '@/components/SectionList';
+import { AppContextProvider } from '@/context/AppContext';
 
 const Home: NextPageWithLayout = () => {
   return (
@@ -18,9 +19,11 @@ const Home: NextPageWithLayout = () => {
         />
       </Head>
 
-      <div className="px-6 pt-4">
-        <SectionList />
-      </div>
+      <AppContextProvider>
+        <div className="px-6 pt-4">
+          <SectionList />
+        </div>
+      </AppContextProvider>
     </>
   );
 };
