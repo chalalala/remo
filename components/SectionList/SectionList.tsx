@@ -4,9 +4,10 @@ import { Button, ButtonVariant } from '../Button';
 import { scrollToBottom } from '@/utils/dom';
 import { Section } from '../Section';
 import { DropResult } from 'react-beautiful-dnd';
-import { addSection, renameSection, reorderItems } from '@/utils/sectionList';
+import { addSection, removeSection, renameSection } from '@/utils/sectionList';
 import { useAppContext } from '@/context/AppContext';
 import dynamic from 'next/dynamic';
+import { addItem, reorderItems } from '@/utils/sectionItem';
 
 // Disables loading react-beautiful-dnd modules in the SSR mode
 // to fix `data-rbd-draggable-context-id` did not match
@@ -35,6 +36,12 @@ export const SectionList: FC<Props> = () => {
     setSections(newSections);
   };
 
+  const onRemoveSection = (sectionId: string) => {
+    const newSections = removeSection(sections, sectionId);
+
+    setSections(newSections);
+  };
+
   const onChangeNewSection = (value: string) => {
     setNewSectionName(null);
 
@@ -44,6 +51,12 @@ export const SectionList: FC<Props> = () => {
     }
 
     const newSections = addSection(sections, value);
+
+    setSections(newSections);
+  };
+
+  const onAddItem = (sectionId: string) => {
+    const newSections = addItem(sections, sectionId, 'Test');
 
     setSections(newSections);
   };
@@ -63,7 +76,7 @@ export const SectionList: FC<Props> = () => {
     if (listRef.current) {
       scrollToBottom(listRef.current);
     }
-  }, [listRef, sections, newSectionName]);
+  }, [listRef, sections.length, newSectionName]);
 
   if (!sections?.length) {
     return <p className="text-sm">No section existed.</p>;
@@ -80,6 +93,8 @@ export const SectionList: FC<Props> = () => {
             key={section.id}
             section={section}
             onChangeTitle={onRenameSection}
+            onRemoveSection={onRemoveSection}
+            onAddItem={onAddItem}
           />
         ))}
 

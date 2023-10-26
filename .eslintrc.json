@@ -15,7 +15,7 @@
     "plugin:prettier/recommended",
     "prettier"
   ],
-  "plugins": ["testing-library"],
+  "plugins": ["testing-library", "jest-formatting"],
   "env": {
     "jest": true
   },
@@ -143,6 +143,8 @@
       {
         "extensions": [".ts", ".tsx"]
       }
-    ]
+    ],
+    "jest-formatting/padding-around-describe-blocks": 2,
+    "jest-formatting/padding-around-test-blocks": 2
   }
 }

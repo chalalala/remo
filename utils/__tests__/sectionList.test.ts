@@ -1,6 +1,5 @@
 import { Section } from '@/types/Resource';
-import { addSection, renameSection, reorderItems } from '../sectionList';
-import { DropResult } from 'react-beautiful-dnd';
+import { addSection, removeSection, renameSection } from '../sectionList';
 
 describe('renameSection', () => {
   it('should rename the section with the given ID', () => {
@@ -64,155 +63,57 @@ describe('addSection', () => {
     ]);
   });
 });
-describe('reorderItems', () => {
-  it('should reorder items within the same section', () => {
-    const sections: Section[] = [
+
+describe('removeSection', () => {
+  it('should remove the section with the given ID', () => {
+    const mockSections = [
       {
         id: '1',
         name: 'Section 1',
-        items: [
-          {
-            id: 'item1',
-            name: 'Item 1',
-            icon: '',
-            url: '',
-          },
-          {
-            id: 'item2',
-            name: 'Item 2',
-            icon: '',
-            url: '',
-          },
-        ],
-      },
-    ];
-
-    const dropResult = {
-      source: { droppableId: '1', index: 0 },
-      destination: { droppableId: '1', index: 1 },
-    } as DropResult;
-
-    const newSections = reorderItems(sections, dropResult);
-
-    expect(newSections).toEqual([
-      {
-        id: '1',
-        name: 'Section 1',
-        items: [
-          {
-            id: 'item2',
-            name: 'Item 2',
-            icon: '',
-            url: '',
-          },
-          {
-            id: 'item1',
-            name: 'Item 1',
-            icon: '',
-            url: '',
-          },
-        ],
-      },
-    ]);
-  });
-
-  it('should move an item to a different section', () => {
-    const sections = [
-      {
-        id: '1',
-        name: 'Section 1',
-        items: [
-          {
-            id: 'item1',
-            name: 'Item 1',
-            icon: '',
-            url: '',
-          },
-          {
-            id: 'item2',
-            name: 'Item 2',
-            icon: '',
-            url: '',
-          },
-        ],
+        items: [],
       },
       {
         id: '2',
         name: 'Section 2',
-        items: [
-          {
-            id: 'item3',
-            name: 'Item 3',
-            icon: '',
-            url: '',
-          },
-        ],
+        items: [],
       },
     ];
 
-    const dropResult = {
-      source: { droppableId: '1', index: 1 },
-      destination: { droppableId: '2', index: 0 },
-    } as DropResult;
-
-    const newSections = reorderItems(sections, dropResult);
+    const newSections = removeSection(mockSections, '1');
 
     expect(newSections).toEqual([
       {
-        id: '1',
-        name: 'Section 1',
-        items: [{ id: 'item1', name: 'Item 1', icon: '', url: '' }],
-      },
-      {
         id: '2',
         name: 'Section 2',
-        items: [
-          {
-            id: 'item2',
-            name: 'Item 2',
-            icon: '',
-            url: '',
-          },
-          {
-            id: 'item3',
-            name: 'Item 3',
-            icon: '',
-            url: '',
-          },
-        ],
+        items: [],
       },
     ]);
   });
 
-  it('should return the original list if destination is null', () => {
-    const sections = [
+  it('should return original list if section ID is not found', () => {
+    const mockSections = [
       {
         id: '1',
         name: 'Section 1',
-        items: [
-          {
-            id: 'item1',
-            name: 'Item 1',
-            icon: '',
-            url: '',
-          },
-          {
-            id: 'item2',
-            name: 'Item 2',
-            icon: '',
-            url: '',
-          },
-        ],
+        items: [],
+      },
+      {
+        id: '2',
+        name: 'Section 2',
+        items: [],
       },
     ];
 
-    const dropResult = {
-      source: { droppableId: '1', index: 1 },
-      destination: null,
-    } as DropResult;
+    const newSections = removeSection(mockSections, 'not-exists');
 
-    const newSections = reorderItems(sections, dropResult);
+    expect(newSections).toEqual(mockSections);
+  });
 
-    expect(newSections).toEqual(sections);
+  it('should return an empty array if the input array is empty', () => {
+    const mockSections: Section[] = [];
+
+    const newSections = removeSection(mockSections, '1');
+
+    expect(newSections).toEqual([]);
   });
 });

@@ -7,7 +7,11 @@ interface Props extends PropsWithChildren {
   defaultOpen?: boolean;
   defaultEditing?: boolean;
   title: string;
+  addBtnTitle?: string;
+  removeBtnTitle?: string;
   onChangeTitle?: (newTitle: string) => void;
+  onRemove?: () => void;
+  onAdd?: () => void;
 }
 
 export const EditableAccordion: FC<Props> = ({
@@ -15,7 +19,11 @@ export const EditableAccordion: FC<Props> = ({
   defaultOpen = true,
   defaultEditing = false,
   title,
+  addBtnTitle,
+  removeBtnTitle,
   onChangeTitle,
+  onRemove,
+  onAdd,
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [isEditing, setIsEditing] = useState(defaultEditing);
@@ -91,11 +99,17 @@ export const EditableAccordion: FC<Props> = ({
         </div>
 
         <div className="flex items-center">
-          <IconButton title="Add">
+          <IconButton
+            title={addBtnTitle}
+            onClick={onAdd}
+          >
             <PlusIcon className="h-3 w-3" />
           </IconButton>
 
-          <IconButton title="Remove">
+          <IconButton
+            title={removeBtnTitle}
+            onClick={onRemove}
+          >
             <MinusIcon className="h-3 w-3" />
           </IconButton>
         </div>
