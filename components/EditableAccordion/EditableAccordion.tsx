@@ -1,7 +1,8 @@
 import { ChevronDownIcon, MinusIcon, PlusIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
-import { ChangeEvent, FC, MouseEvent, PropsWithChildren, SyntheticEvent, useState } from 'react';
+import { FC, PropsWithChildren, SyntheticEvent, useState } from 'react';
 import { IconButton } from '../IconButton';
+import { EditableContent } from '../EditableContent';
 
 interface Props extends PropsWithChildren {
   defaultOpen?: boolean;
@@ -27,29 +28,9 @@ export const EditableAccordion: FC<Props> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [isEditing, setIsEditing] = useState(defaultEditing);
-  const [editingTitle, setEditingTitle] = useState(title);
 
   const onToggleDetails = (event: SyntheticEvent<HTMLDetailsElement, Event>) => {
     setIsOpen((event.target as HTMLDetailsElement).open);
-  };
-
-  const onSummaryClick = (event: MouseEvent<HTMLDetailsElement>) => {
-    // Prevent toggling details when in editing mode
-    if (isEditing) {
-      event.preventDefault();
-    }
-  };
-
-  const onChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
-    setEditingTitle(event.target.value);
-  };
-
-  const onSubmitChanges = () => {
-    setIsEditing(false);
-
-    if (typeof onChangeTitle === 'function') {
-      onChangeTitle(editingTitle);
-    }
   };
 
   const onDoubleClickText = () => {
@@ -66,8 +47,7 @@ export const EditableAccordion: FC<Props> = ({
           'flex list-none items-center justify-between gap-4',
           'cursor-pointer select-none',
         )}
-        title={editingTitle}
-        onClick={onSummaryClick}
+        title={title}
       >
         <div className="flex h-5 min-w-0 flex-1 items-center gap-2">
           <ChevronDownIcon
@@ -75,27 +55,15 @@ export const EditableAccordion: FC<Props> = ({
               'rotate-180 transform': isOpen,
             })}
           />
-          {isEditing ? (
-            <form
-              onSubmit={onSubmitChanges}
-              className="h-full w-full"
-            >
-              <input
-                className="h-full w-full border-b border-b-gray-700 outline-none"
-                value={editingTitle}
-                onChange={onChangeInput}
-                onBlur={onSubmitChanges}
-                autoFocus
-              />
-            </form>
-          ) : (
-            <span
-              className="mb-px h-full w-full truncate"
-              onDoubleClick={onDoubleClickText}
-            >
-              {editingTitle}
-            </span>
-          )}
+
+          <EditableContent
+            isEditing={isEditing}
+            title={title}
+            defaultEditing={defaultEditing}
+            onSubmit={onChangeTitle}
+            setIsEditing={setIsEditing}
+            onDoubleClick={onDoubleClickText}
+          />
         </div>
 
         <div className="flex items-center">

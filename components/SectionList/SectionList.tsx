@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { EditableAccordion } from '../EditableAccordion';
 import { Button, ButtonVariant } from '../Button';
 import { scrollToBottom } from '@/utils/dom';
@@ -7,7 +7,8 @@ import { DropResult } from 'react-beautiful-dnd';
 import { addSection, removeSection, renameSection } from '@/utils/sectionList';
 import { useAppContext } from '@/context/AppContext';
 import dynamic from 'next/dynamic';
-import { addItem, reorderItems } from '@/utils/sectionItem';
+import { reorderItems } from '@/utils/sectionItem';
+import { useEditableContent } from '@/hooks/useEditableContent';
 
 // Disables loading react-beautiful-dnd modules in the SSR mode
 // to fix `data-rbd-draggable-context-id` did not match
@@ -24,11 +25,11 @@ interface Props {}
 export const SectionList: FC<Props> = () => {
   const listRef = useRef<HTMLDivElement>(null);
   const { sections, setSections } = useAppContext();
-  const [newSectionName, setNewSectionName] = useState<string | null>(null);
-
-  const openAddNewSection = () => {
-    setNewSectionName('');
-  };
+  const {
+    name: newSectionName,
+    setName: setNewSectionName,
+    openAdd: openAddNewSection,
+  } = useEditableContent();
 
   const onRenameSection = (sectionId: string, value: string) => {
     const newSections = renameSection(sections, sectionId, value);
@@ -42,7 +43,7 @@ export const SectionList: FC<Props> = () => {
     setSections(newSections);
   };
 
-  const onChangeNewSection = (value: string) => {
+  const onAddNewSection = (value: string) => {
     setNewSectionName(null);
 
     // Not to add new section if the name is empty
@@ -51,12 +52,6 @@ export const SectionList: FC<Props> = () => {
     }
 
     const newSections = addSection(sections, value);
-
-    setSections(newSections);
-  };
-
-  const onAddItem = (sectionId: string) => {
-    const newSections = addItem(sections, sectionId, 'Test');
 
     setSections(newSections);
   };
@@ -94,7 +89,6 @@ export const SectionList: FC<Props> = () => {
             section={section}
             onChangeTitle={onRenameSection}
             onRemoveSection={onRemoveSection}
-            onAddItem={onAddItem}
           />
         ))}
 
@@ -102,7 +96,7 @@ export const SectionList: FC<Props> = () => {
           <EditableAccordion
             title={newSectionName}
             defaultEditing
-            onChangeTitle={onChangeNewSection}
+            onChangeTitle={onAddNewSection}
           />
         ) : null}
 
