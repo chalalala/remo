@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@heroicons/react": "1.0.6",
+    "@radix-ui/react-popover": "^1.0.7",
     "@types/node": "20.6.4",
     "@types/react": "18.2.22",
     "@types/react-beautiful-dnd": "13.1.6",

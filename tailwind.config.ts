@@ -25,6 +25,7 @@ const config = {
       colors: {
         indigo: {
           10: 'F9FAFF',
+          50: '#EEF2FF',
         },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',

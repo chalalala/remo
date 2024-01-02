@@ -59,7 +59,6 @@ export const EditableAccordion: FC<Props> = ({
           <EditableContent
             isEditing={isEditing}
             title={title}
-            defaultEditing={defaultEditing}
             onSubmit={onChangeTitle}
             setIsEditing={setIsEditing}
             onDoubleClick={onDoubleClickText}
