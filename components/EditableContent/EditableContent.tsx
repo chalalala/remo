@@ -4,7 +4,6 @@ import { ChangeEvent, ElementType, FC, HTMLAttributes, useState } from 'react';
 interface Props extends Omit<HTMLAttributes<HTMLElement>, 'onSubmit'> {
   title: string;
   isEditing: boolean;
-  defaultEditing?: boolean;
   setIsEditing: (isEditing: boolean) => void;
   onSubmit?: (newTitle: string) => void;
   TitleWrapper?: ElementType;
