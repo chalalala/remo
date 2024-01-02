@@ -67,3 +67,22 @@ export const addItem = (sections: Section[], sectionId: string, name: string) =>
 
   return newSections;
 };
+
+export const removeItem = (sections: Section[], sectionId: string, itemId: string) => {
+  const sectionIdx = sections.findIndex((section) => section.id === sectionId);
+
+  if (sectionIdx === -1) {
+    return sections;
+  }
+
+  const items = sections[sectionIdx].items;
+
+  const newSections = JSON.parse(JSON.stringify(sections));
+
+  newSections.splice(sectionIdx, 1, {
+    ...sections[sectionIdx],
+    items: items.filter((item) => item.id !== itemId),
+  });
+
+  return newSections;
+};

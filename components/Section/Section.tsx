@@ -3,15 +3,43 @@ import React, { FC } from 'react';
 import { EditableAccordion } from '../EditableAccordion';
 import { DraggableItem } from '../DraggableItem';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
+import { useEditableContent } from '@/hooks/useEditableContent';
+import { addItem, removeItem } from '@/utils/sectionItem';
+import { useAppContext } from '@/context/AppContext';
 
 interface Props {
   section: SectionType;
   onChangeTitle: (sectionId: string, value: string) => void;
   onRemoveSection: (sectionId: string) => void;
-  onAddItem: (sectionId: string, value: string) => void;
 }
 
-export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection, onAddItem }) => {
+export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection }) => {
+  const { sections, setSections } = useAppContext();
+  const {
+    name: newItemName,
+    setName: setNewItemName,
+    openAdd: openAddNewItem,
+  } = useEditableContent();
+
+  const onAddNewItem = (value: string) => {
+    setNewItemName(null);
+
+    // Not to add new item if the name is empty
+    if (!value) {
+      return;
+    }
+
+    const newSections = addItem(sections, section.id, value);
+
+    setSections(newSections);
+  };
+
+  const onRemoveItem = (itemId: string) => {
+    const newSections = removeItem(sections, section.id, itemId);
+
+    setSections(newSections);
+  };
+
   return (
     <EditableAccordion
       key={section.id}
@@ -20,7 +48,7 @@ export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection, on
       removeBtnTitle="Remove section"
       onChangeTitle={(value) => onChangeTitle(section.id, value)}
       onRemove={() => onRemoveSection(section.id)}
-      onAdd={() => onAddItem(section.id, 'Test')}
+      onAdd={openAddNewItem}
     >
       <Droppable droppableId={section.id}>
         {(provided) => (
@@ -29,6 +57,14 @@ export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection, on
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
+            {typeof newItemName === 'string' ? (
+              <DraggableItem
+                title={newItemName}
+                defaultEditing
+                onChangeTitle={onAddNewItem}
+              />
+            ) : null}
+
             {section.items.map((item, index) => (
               <Draggable
                 key={item.id}
@@ -43,8 +79,9 @@ export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection, on
                   >
                     <DraggableItem
                       icon={item.icon}
-                      text={item.name}
+                      title={item.name}
                       url={item.url}
+                      onRemove={() => onRemoveItem(item.id)}
                     />
                   </div>
                 )}

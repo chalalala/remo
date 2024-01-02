@@ -1,12 +1,13 @@
-import React, { FC, HTMLAttributes, PropsWithChildren } from 'react';
+import React, { FC, HTMLAttributes } from 'react';
 
-interface Props extends PropsWithChildren<HTMLAttributes<HTMLElement>> {
+interface Props extends HTMLAttributes<HTMLElement> {
+  title: string;
   url?: string;
 }
 
-export const DraggableItemTextWrapper: FC<Props> = ({ url, children, ...props }) => {
+export const DraggableItemTextWrapper: FC<Props> = ({ url, title, ...props }) => {
   if (!url) {
-    return <span {...props}>{children}</span>;
+    return <span {...props}>{title}</span>;
   }
 
   return (
@@ -16,7 +17,7 @@ export const DraggableItemTextWrapper: FC<Props> = ({ url, children, ...props })
       rel="noreferrer"
       {...props}
     >
-      {children}
+      {title}
     </a>
   );
 };
