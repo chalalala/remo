@@ -53,7 +53,7 @@ export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection }) 
       <Droppable droppableId={section.id}>
         {(provided) => (
           <div
-            className="mt-2.5 space-y-1"
+            className="space-y-1 pt-2.5"
             {...provided.droppableProps}
             ref={provided.innerRef}
           >

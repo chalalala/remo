@@ -100,7 +100,7 @@ export const SectionList: FC<Props> = () => {
           />
         ) : null}
 
-        <div className="sticky bottom-0 bg-white py-4">
+        <div className="sticky bottom-0 bg-white pb-4 pt-1.5">
           <Button
             variant={ButtonVariant.DASHED}
             onClick={openAddNewSection}
