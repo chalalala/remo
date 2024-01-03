@@ -55,7 +55,7 @@ export const addItem = (sections: Section[], sectionId: string, name: string) =>
     id: `item_${id}`,
     name,
     icon: '',
-    url: window.location.href,
+    url: '',
   };
 
   const newSections = JSON.parse(JSON.stringify(sections));
@@ -83,6 +83,34 @@ export const removeItem = (sections: Section[], sectionId: string, itemId: strin
     ...sections[sectionIdx],
     items: items.filter((item) => item.id !== itemId),
   });
+
+  return newSections;
+};
+
+export const updateItem = (
+  sections: Section[],
+  sectionId: string,
+  itemId: string,
+  property: Record<string, unknown>,
+) => {
+  const sectionIdx = sections.findIndex((section) => section.id === sectionId);
+
+  if (sectionIdx === -1) {
+    return sections;
+  }
+
+  const itemIdx = sections[sectionIdx].items.findIndex((item) => item.id === itemId);
+
+  if (itemIdx === -1) {
+    return sections;
+  }
+
+  const newSections = JSON.parse(JSON.stringify(sections));
+
+  newSections[sectionIdx].items[itemIdx] = {
+    ...newSections[sectionIdx].items[itemIdx],
+    ...property,
+  };
 
   return newSections;
 };

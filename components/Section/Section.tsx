@@ -78,6 +78,8 @@ export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection }) 
                     {...provided.dragHandleProps}
                   >
                     <DraggableItem
+                      sectionId={section.id}
+                      itemId={item.id}
                       icon={item.icon}
                       title={item.name}
                       url={item.url}
