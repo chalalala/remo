@@ -1,11 +1,15 @@
 import { FC, useState } from 'react';
 import { Image } from '../Image';
 import { IconButton } from '../IconButton';
-import { LinkIcon, PencilIcon, TrashIcon } from '@heroicons/react/solid';
+import { PencilIcon, TrashIcon } from '@heroicons/react/solid';
 import { DraggableItemTextWrapper } from './DraggableItemTextWrapper';
 import { EditableContent } from '../EditableContent';
+import { DraggableItemPopover } from './DraggableItemPopover';
+import { useAppContext } from '@/context/AppContext';
 
 interface Props {
+  sectionId?: string;
+  itemId?: string;
   title: string;
   icon?: string;
   url?: string;
@@ -15,6 +19,8 @@ interface Props {
 }
 
 export const DraggableItem: FC<Props> = ({
+  sectionId,
+  itemId,
   title,
   icon,
   url,
@@ -22,6 +28,7 @@ export const DraggableItem: FC<Props> = ({
   onChangeTitle,
   onRemove,
 }) => {
+  const { sections, setSections } = useAppContext();
   const [isEditing, setIsEditing] = useState(defaultEditing);
 
   return (
@@ -36,22 +43,19 @@ export const DraggableItem: FC<Props> = ({
 
       <div className="flex w-full min-w-0 flex-1 items-center justify-between gap-1">
         <div className="flex w-full min-w-0 items-center gap-1">
-          <IconButton className="shrink-0">
-            {url ? (
-              <Image
-                src={icon || '/svgs/earth.svg'}
-                alt={title}
-                className="h-4 w-4"
-              />
-            ) : (
-              <LinkIcon className="h-4 w-4" />
-            )}
-          </IconButton>
+          <DraggableItemPopover
+            sections={sections}
+            setSections={setSections}
+            sectionId={sectionId}
+            itemId={itemId}
+            url={url}
+            title={title}
+            icon={icon}
+          />
 
           <EditableContent
             isEditing={isEditing}
             title={title}
-            defaultEditing={defaultEditing}
             setIsEditing={setIsEditing}
             onSubmit={onChangeTitle}
             TitleWrapper={(props) => (

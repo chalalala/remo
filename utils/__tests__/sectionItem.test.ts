@@ -1,5 +1,5 @@
 import { Section } from '@/types/Resource';
-import { addItem, removeItem, reorderItems } from '../sectionItem';
+import { addItem, removeItem, reorderItems, updateItem } from '../sectionItem';
 import { DropResult } from 'react-beautiful-dnd';
 
 describe('reorderItems', () => {
@@ -183,7 +183,7 @@ describe('addItem', () => {
             id: expect.any(String),
             name: 'New Item',
             icon: '',
-            url: window.location.href,
+            url: '',
           },
           {
             id: 'item1',
@@ -234,6 +234,57 @@ describe('removeItem', () => {
 
   it('should return the original list if section ID is not found', () => {
     const newSections = removeItem(sections, 'not-found', 'New Item');
+
+    expect(newSections).toEqual(sections);
+  });
+});
+
+describe('updateItem', () => {
+  const sections: Section[] = [
+    {
+      id: '1',
+      name: 'Section 1',
+      items: [
+        {
+          id: 'item1',
+          name: 'Item 1',
+          icon: '',
+          url: '',
+        },
+      ],
+    },
+  ];
+
+  it('should update the item with the given ID', () => {
+    const section = sections[0];
+    const newSections = updateItem(sections, section.id, section.items[0].id, {
+      url: 'test',
+    });
+
+    expect(newSections).toEqual([
+      {
+        id: '1',
+        name: 'Section 1',
+        items: [
+          {
+            id: 'item1',
+            name: 'Item 1',
+            icon: '',
+            url: 'test',
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('should return the original list if section ID is not found', () => {
+    const newSections = updateItem(sections, 'not-found', 'item1', { url: 'test' });
+
+    expect(newSections).toEqual(sections);
+  });
+
+  it('should return the original list if item ID is not found', () => {
+    const newSections = updateItem(sections, '1', 'not-found', { url: 'test' });
 
     expect(newSections).toEqual(sections);
   });
