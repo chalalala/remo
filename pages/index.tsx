@@ -1,33 +1,27 @@
-import Head from 'next/head';
 import { Layout } from '@/components/Layout';
 import { NextPageWithLayout } from './_app';
 import { SectionList } from '@/components/SectionList';
-import { AppContextProvider } from '@/context/AppContext';
+import { GoogleSignIn } from '@/components/GoogleSignIn';
+import { useAppContext } from '@/context/AppContext';
 
 const Home: NextPageWithLayout = () => {
-  return (
-    <>
-      <Head>
-        <title>REMO</title>
-        <meta
-          name="description"
-          content="A simple resource manager"
-        />
-        <link
-          rel="icon"
-          href="/favicon.ico"
-        />
-      </Head>
+  const { isLoadingToken, accessToken } = useAppContext();
 
-      <AppContextProvider>
+  if (isLoadingToken) {
+    return null;
+  }
+
+  return (
+    <Layout type={accessToken ? 'main' : 'account'}>
+      {accessToken ? (
         <div className="px-6 pt-4">
           <SectionList />
         </div>
-      </AppContextProvider>
-    </>
+      ) : (
+        <GoogleSignIn />
+      )}
+    </Layout>
   );
 };
-
-Home.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default Home;

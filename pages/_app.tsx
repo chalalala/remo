@@ -1,7 +1,10 @@
 import { AppProps } from 'next/app';
-import '../styles/globals.css';
 import { ReactElement, ReactNode } from 'react';
 import { NextPage } from 'next';
+import { AppContextProvider } from '@/context/AppContext';
+import Head from 'next/head';
+import { GoogleApiScript } from '@/components/GoogleApiScript';
+import '../styles/globals.css';
 
 export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -14,7 +17,27 @@ type AppPropsWithLayout = AppProps & {
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  return getLayout(<Component {...pageProps} />);
+  return getLayout(
+    <>
+      <Head>
+        <title>REMO</title>
+        <meta
+          name="description"
+          content="A simple resource manager"
+        />
+        <link
+          rel="icon"
+          href="/favicon.ico"
+        />
+      </Head>
+
+      <AppContextProvider>
+        <Component {...pageProps} />
+
+        <GoogleApiScript />
+      </AppContextProvider>
+    </>,
+  );
 }
 
 export default MyApp;

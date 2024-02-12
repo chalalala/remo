@@ -11,18 +11,6 @@ dependencies:
   '@radix-ui/react-popover':
     specifier: ^1.0.7
     version: 1.0.7(@types/react-dom@18.2.7)(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
-  '@types/node':
-    specifier: 20.6.4
-    version: 20.6.4
-  '@types/react':
-    specifier: 18.2.22
-    version: 18.2.22
-  '@types/react-beautiful-dnd':
-    specifier: 13.1.6
-    version: 13.1.6
-  '@types/react-dom':
-    specifier: 18.2.7
-    version: 18.2.7
   autoprefixer:
     specifier: 10.4.16
     version: 10.4.16(postcss@8.4.30)
@@ -70,9 +58,30 @@ devDependencies:
   '@testing-library/react':
     specifier: ^14.0.0
     version: 14.0.0(react-dom@18.2.0)(react@18.2.0)
+  '@types/gapi.client':
+    specifier: ^1.0.8
+    version: 1.0.8
+  '@types/gapi.client.drive-v3':
+    specifier: ^0.0.4
+    version: 0.0.4
+  '@types/google.accounts':
+    specifier: ^0.0.14
+    version: 0.0.14
   '@types/jest':
     specifier: ^29.5.5
     version: 29.5.5
+  '@types/node':
+    specifier: 20.6.4
+    version: 20.6.4
+  '@types/react':
+    specifier: 18.2.22
+    version: 18.2.22
+  '@types/react-beautiful-dnd':
+    specifier: 13.1.6
+    version: 13.1.6
+  '@types/react-dom':
+    specifier: 18.2.7
+    version: 18.2.7
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.7.3
     version: 6.7.3(@typescript-eslint/parser@6.7.2)(eslint@8.50.0)(typescript@5.2.2)
@@ -833,6 +842,20 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
 
+  /@maxim_mazurok/gapi.client.discovery-v1@0.1.20200806:
+    resolution: {integrity: sha512-Wl6UfmZVDdWbY3PUu8E2ULk9RPLjnMqp/iOA4tcK8Ne+U/GmlnWP/e34IaZNGArfl7iXJNOG+/3Rj9L9jQyF9Q==}
+    dependencies:
+      '@types/gapi.client': 1.0.8
+      '@types/gapi.client.discovery-v1': 0.0.4
+    dev: true
+
+  /@maxim_mazurok/gapi.client.drive-v3@0.0.20240207:
+    resolution: {integrity: sha512-TlikRf4X0mNxOVN1bNbeeHSP3RlQIavgaWcsZtaK5IRJ/DfTwcaMGCwIKbGBm2psnv6VZ3Ano0zBMQqv6OLnAQ==}
+    dependencies:
+      '@types/gapi.client': 1.0.8
+      '@types/gapi.client.discovery-v1': 0.0.4
+    dev: true
+
   /@next/env@13.5.2:
     resolution: {integrity: sha512-dUseBIQVax+XtdJPzhwww4GetTjlkRSsXeQnisIJWBaHsnxYcN2RGzsPHi58D6qnkATjnhuAtQTJmR1hKYQQPg==}
     dev: false
@@ -1428,6 +1451,26 @@ packages:
       '@babel/types': 7.23.0
     dev: true
 
+  /@types/gapi.client.discovery-v1@0.0.4:
+    resolution: {integrity: sha512-uevhRumNE65F5mf2gABLaReOmbFSXONuzFZjNR3dYv6BmkHg+wciubHrfBAsp3554zNo3Dcg6dUAlwMqQfpwjQ==}
+    dependencies:
+      '@maxim_mazurok/gapi.client.discovery-v1': 0.1.20200806
+    dev: true
+
+  /@types/gapi.client.drive-v3@0.0.4:
+    resolution: {integrity: sha512-jE37dJ0EzAdY0aJPFOp20xmec/aO0P4HtUIA9k07RMPyedFDOcuMlSac1r0PklwQdgXF7BHaMoObNHNAnwSQUQ==}
+    dependencies:
+      '@maxim_mazurok/gapi.client.drive-v3': 0.0.20240207
+    dev: true
+
+  /@types/gapi.client@1.0.8:
+    resolution: {integrity: sha512-qJQUmmumbYym3Amax0S8CVzuSngcXsC1fJdwRS2zeW5lM63zXkw4wJFP+bG0jzgi0R6EsJKoHnGNVTDbOyG1ng==}
+    dev: true
+
+  /@types/google.accounts@0.0.14:
+    resolution: {integrity: sha512-HqIVkVzpiLWhlajhQQd4rIV7czanFvXblJI2J1fSrL+VKQuQwwZ63m35D/mI0flsqKE6p/hNrAG0Yn4FD6JvNA==}
+    dev: true
+
   /@types/graceful-fs@4.1.7:
     resolution: {integrity: sha512-MhzcwU8aUygZroVwL2jeYk6JisJrPl/oov/gsgGCue9mkgl9wjGbzReYQClxiUgFDnib9FuHqTndccKeZKxTRw==}
     dependencies:
@@ -1490,7 +1533,7 @@ packages:
     resolution: {integrity: sha512-FXAuaa52ux7HWQDumi3MFSAAsW8OKfDImy1pSZPKe85nV9mZ1f4spVzW0a2boYvkIhphjbWUi5EwUiRG8Rq/Qg==}
     dependencies:
       '@types/react': 18.2.22
-    dev: false
+    dev: true
 
   /@types/react-dom@18.2.7:
     resolution: {integrity: sha512-GRaAEriuT4zp9N4p1i8BDBYmEyfo+xQ3yHjJU4eiK5NDa1RmUZG+unZABUTK4/Ox/M+GaHwb6Ow8rUITrtjszA==}
