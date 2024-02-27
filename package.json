@@ -40,6 +40,7 @@
     "@types/gapi.client": "^1.0.8",
     "@types/gapi.client.drive-v3": "^0.0.4",
     "@types/google.accounts": "^0.0.14",
+    "@types/chrome": "^0.0.262",
     "@types/jest": "^29.5.5",
     "@types/node": "20.6.4",
     "@types/react": "18.2.22",

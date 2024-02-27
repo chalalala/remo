@@ -58,6 +58,9 @@ devDependencies:
   '@testing-library/react':
     specifier: ^14.0.0
     version: 14.0.0(react-dom@18.2.0)(react@18.2.0)
+  '@types/chrome':
+    specifier: ^0.0.262
+    version: 0.0.262
   '@types/gapi.client':
     specifier: ^1.0.8
     version: 1.0.8
@@ -849,8 +852,8 @@ packages:
       '@types/gapi.client.discovery-v1': 0.0.4
     dev: true
 
-  /@maxim_mazurok/gapi.client.drive-v3@0.0.20240207:
-    resolution: {integrity: sha512-TlikRf4X0mNxOVN1bNbeeHSP3RlQIavgaWcsZtaK5IRJ/DfTwcaMGCwIKbGBm2psnv6VZ3Ano0zBMQqv6OLnAQ==}
+  /@maxim_mazurok/gapi.client.drive-v3@0.0.20240227:
+    resolution: {integrity: sha512-cdCR+BPSvzI+HH0+SqQMij03vtVsDPPFOVJHKq6161L3qmt1TjA7EA+sZlxRAt/PwTz0CtPSom3O8l/TQ4MStA==}
     dependencies:
       '@types/gapi.client': 1.0.8
       '@types/gapi.client.discovery-v1': 0.0.4
@@ -1451,6 +1454,23 @@ packages:
       '@babel/types': 7.23.0
     dev: true
 
+  /@types/chrome@0.0.262:
+    resolution: {integrity: sha512-TOoj3dqSYE13PD2fRuMQ6X6pggEvL9rRk/yOYOyWE6sfqRWxsJm4VoVm+wr9pkr4Sht/M5t7FFL4vXato8d1gA==}
+    dependencies:
+      '@types/filesystem': 0.0.35
+      '@types/har-format': 1.2.15
+    dev: true
+
+  /@types/filesystem@0.0.35:
+    resolution: {integrity: sha512-1eKvCaIBdrD2mmMgy5dwh564rVvfEhZTWVQQGRNn0Nt4ZEnJ0C8oSUCzvMKRA4lGde5oEVo+q2MrTTbV/GHDCQ==}
+    dependencies:
+      '@types/filewriter': 0.0.33
+    dev: true
+
+  /@types/filewriter@0.0.33:
+    resolution: {integrity: sha512-xFU8ZXTw4gd358lb2jw25nxY9QAgqn2+bKKjKOYfNCzN4DKCFetK7sPtrlpg66Ywe3vWY9FNxprZawAh9wfJ3g==}
+    dev: true
+
   /@types/gapi.client.discovery-v1@0.0.4:
     resolution: {integrity: sha512-uevhRumNE65F5mf2gABLaReOmbFSXONuzFZjNR3dYv6BmkHg+wciubHrfBAsp3554zNo3Dcg6dUAlwMqQfpwjQ==}
     dependencies:
@@ -1460,7 +1480,7 @@ packages:
   /@types/gapi.client.drive-v3@0.0.4:
     resolution: {integrity: sha512-jE37dJ0EzAdY0aJPFOp20xmec/aO0P4HtUIA9k07RMPyedFDOcuMlSac1r0PklwQdgXF7BHaMoObNHNAnwSQUQ==}
     dependencies:
-      '@maxim_mazurok/gapi.client.drive-v3': 0.0.20240207
+      '@maxim_mazurok/gapi.client.drive-v3': 0.0.20240227
     dev: true
 
   /@types/gapi.client@1.0.8:
@@ -1475,6 +1495,10 @@ packages:
     resolution: {integrity: sha512-MhzcwU8aUygZroVwL2jeYk6JisJrPl/oov/gsgGCue9mkgl9wjGbzReYQClxiUgFDnib9FuHqTndccKeZKxTRw==}
     dependencies:
       '@types/node': 20.6.4
+    dev: true
+
+  /@types/har-format@1.2.15:
+    resolution: {integrity: sha512-RpQH4rXLuvTXKR0zqHq3go0RVXYv/YVqv4TnPH95VbwUxZdQlK1EtcMvQvMpDngHbt13Csh9Z4qT9AbkiQH5BA==}
     dev: true
 
   /@types/hoist-non-react-statics@3.3.4:

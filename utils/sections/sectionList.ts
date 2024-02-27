@@ -1,5 +1,5 @@
 import { Section } from '@/types/Resource';
-import { generateId } from './string';
+import { generateId } from '../string';
 
 /**
  * Renames a section in the given array of sections.

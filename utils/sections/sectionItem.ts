@@ -1,5 +1,5 @@
 import { Section, SectionItem } from '@/types/Resource';
-import { generateId } from './string';
+import { generateId } from '../string';
 import { DropResult } from 'react-beautiful-dnd';
 
 /**

@@ -1,10 +1,12 @@
 import { cookieKey } from '@/constants/cookies';
-import { getCookie } from './cookies';
+import { getCookie, removeCookie } from './cookies';
 
 export const signOut = (callbackFunc: () => void) => {
-  const token = getCookie(cookieKey.GAPI_TOKEN);
+  const cname = cookieKey.GAPI_TOKEN;
+  const token = getCookie(cname);
 
   if (token) {
     window.google.accounts.oauth2.revoke(token, callbackFunc);
+    removeCookie(cname);
   }
 };

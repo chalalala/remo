@@ -4,8 +4,8 @@ import { EditableAccordion } from '../EditableAccordion';
 import { DraggableItem } from '../DraggableItem';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { useEditableContent } from '@/hooks/useEditableContent';
-import { addItem, removeItem } from '@/utils/sectionItem';
 import { useAppContext } from '@/context/AppContext';
+import { addItem, removeItem } from '@/utils/sections/sectionItem';
 
 interface Props {
   section: SectionType;

@@ -9,7 +9,7 @@ export const setCookie = (cname: string, cvalue: string, duration: number) => {
 
   expires.setTime(expires.getTime() + duration);
 
-  document.cookie = cname + '=' + cvalue + ';' + new Date(expires).toUTCString() + ';path=/';
+  document.cookie = `${cname}=${cvalue}; expires=${new Date(expires).toUTCString()}; path=/`;
 };
 
 export const getCookie = (cname: string) => {
@@ -35,7 +35,8 @@ export const getCookie = (cname: string) => {
 export const removeCookie = (cname: string) => {
   const expireTime = new Date();
 
+  // Set time in the past
   expireTime.setFullYear(expireTime.getFullYear() - 1);
 
-  setCookie(cname, '', expireTime.getMilliseconds());
+  document.cookie = `${cname}=''; expires=${expireTime.toUTCString()}; path=/`;
 };

@@ -3,7 +3,6 @@ import { ReactElement, ReactNode } from 'react';
 import { NextPage } from 'next';
 import { AppContextProvider } from '@/context/AppContext';
 import Head from 'next/head';
-import { GoogleApiScript } from '@/components/GoogleApiScript';
 import '../styles/globals.css';
 
 export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
@@ -33,8 +32,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
       <AppContextProvider>
         <Component {...pageProps} />
-
-        <GoogleApiScript />
       </AppContextProvider>
     </>,
   );

@@ -8,13 +8,7 @@ interface Props {
 
 export const Header: FC<Props> = ({ variant = 'default' }) => {
   if (variant === 'minimal') {
-    return (
-      <header className="sticky top-0 h-12 bg-indigo-500 p-4 text-white">
-        {/* <IconButton>
-          <XIcon className="h-4 w-4 text-inherit" />
-        </IconButton> */}
-      </header>
-    );
+    return <header className="sticky top-0 h-12 bg-indigo-500 p-4 text-white"></header>;
   }
 
   return (

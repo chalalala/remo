@@ -1,6 +1,7 @@
 import { cookieKey } from '@/constants/cookies';
 import { Section } from '@/types/Resource';
 import { getCookie } from '@/utils/cookies';
+import { isExtension } from '@/utils/env';
 import {
   Dispatch,
   FC,
@@ -12,28 +13,25 @@ import {
   useState,
 } from 'react';
 
+type GoogleAuth = ReturnType<typeof window.google.accounts.oauth2.initTokenClient>;
+
 interface AppContextValue {
   // States
   sections: Section[];
-  googleAuth: ReturnType<typeof window.google.accounts.oauth2.initTokenClient> | undefined;
+  googleAuth: GoogleAuth | undefined;
   accessToken: string;
-  isLoadingToken: boolean;
 
   // Actions
   setSections: Dispatch<SetStateAction<Section[]>>;
-  setGoogleAuth: Dispatch<
-    SetStateAction<ReturnType<typeof window.google.accounts.oauth2.initTokenClient> | undefined>
-  >;
+  setGoogleAuth: Dispatch<SetStateAction<GoogleAuth | undefined>>;
   setAccessToken: Dispatch<SetStateAction<string>>;
 }
 
 const AppContext = createContext<AppContextValue>({} as never);
 
 export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [googleAuth, setGoogleAuth] =
-    useState<ReturnType<typeof window.google.accounts.oauth2.initTokenClient>>();
+  const [googleAuth, setGoogleAuth] = useState<GoogleAuth>();
   const [accessToken, setAccessToken] = useState('');
-  const [isLoadingToken, setIsLoadingToken] = useState(true);
   const [sections, setSections] = useState<Section[]>(() => [
     {
       id: 'section1',
@@ -61,13 +59,21 @@ export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
   ]);
 
   useEffect(() => {
+    if (isExtension()) {
+      chrome.identity.getAuthToken({ interactive: true }, (token) => {
+        if (token) {
+          setAccessToken(token);
+        }
+      });
+
+      return;
+    }
+
     const token = getCookie(cookieKey.GAPI_TOKEN);
 
     if (token) {
       setAccessToken(token);
     }
-
-    setIsLoadingToken(false);
   }, []);
 
   const contextValue: AppContextValue = {
@@ -75,7 +81,6 @@ export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
     sections,
     googleAuth,
     accessToken,
-    isLoadingToken,
 
     // Actions
     setSections,

@@ -1,11 +1,22 @@
-import { useAppContext } from '@/context/AppContext';
 import { FC } from 'react';
 import { Image } from '../Image';
+import { isExtension } from '@/utils/env';
+import { useAppContext } from '@/context/AppContext';
 
 export const GoogleSignIn: FC = () => {
-  const { googleAuth } = useAppContext();
+  const { googleAuth, setAccessToken } = useAppContext();
 
   const signIn = () => {
+    if (isExtension()) {
+      chrome.identity.getAuthToken({ interactive: true }, (token) => {
+        if (token) {
+          setAccessToken(token);
+        }
+      });
+
+      return;
+    }
+
     if (!googleAuth) {
       return;
     }
