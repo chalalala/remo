@@ -1,5 +1,5 @@
 import { cookieKey } from '@/constants/cookies';
-import { getCookie, removeCookie } from './cookies';
+import { getCookie, removeCookie } from '../utils/cookies';
 
 export const signOut = (callbackFunc: () => void) => {
   const cname = cookieKey.GAPI_TOKEN;
