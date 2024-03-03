@@ -1,9 +1,9 @@
 import { FC, FormEvent, useState } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CheckIcon, LinkIcon } from '@heroicons/react/solid';
-import { updateItem } from '@/utils/sectionItem';
 import { Section } from '@/types/Resource';
 import { Image } from '../Image';
+import { updateItem } from '@/utils/sections/sectionItem';
 
 interface Props {
   sections: Section[];

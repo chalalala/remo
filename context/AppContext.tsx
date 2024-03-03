@@ -1,4 +1,7 @@
+import { cookieKey } from '@/constants/cookies';
 import { Section } from '@/types/Resource';
+import { getCookie } from '@/utils/cookies';
+import { isExtension } from '@/utils/env';
 import {
   Dispatch,
   FC,
@@ -6,17 +9,29 @@ import {
   SetStateAction,
   createContext,
   useContext,
+  useEffect,
   useState,
 } from 'react';
 
+type GoogleAuth = ReturnType<typeof window.google.accounts.oauth2.initTokenClient>;
+
 interface AppContextValue {
+  // States
   sections: Section[];
+  googleAuth: GoogleAuth | undefined;
+  accessToken: string;
+
+  // Actions
   setSections: Dispatch<SetStateAction<Section[]>>;
+  setGoogleAuth: Dispatch<SetStateAction<GoogleAuth | undefined>>;
+  setAccessToken: Dispatch<SetStateAction<string>>;
 }
 
 const AppContext = createContext<AppContextValue>({} as never);
 
 export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
+  const [googleAuth, setGoogleAuth] = useState<GoogleAuth>();
+  const [accessToken, setAccessToken] = useState('');
   const [sections, setSections] = useState<Section[]>(() => [
     {
       id: 'section1',
@@ -43,9 +58,34 @@ export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
     },
   ]);
 
+  useEffect(() => {
+    if (isExtension()) {
+      chrome.identity.getAuthToken({ interactive: true }, (token) => {
+        if (token) {
+          setAccessToken(token);
+        }
+      });
+
+      return;
+    }
+
+    const token = getCookie(cookieKey.GAPI_TOKEN);
+
+    if (token) {
+      setAccessToken(token);
+    }
+  }, []);
+
   const contextValue: AppContextValue = {
+    // States
     sections,
+    googleAuth,
+    accessToken,
+
+    // Actions
     setSections,
+    setGoogleAuth,
+    setAccessToken,
   };
 
   return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;

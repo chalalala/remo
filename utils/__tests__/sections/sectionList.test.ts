@@ -1,5 +1,5 @@
 import { Section } from '@/types/Resource';
-import { addSection, removeSection, renameSection } from '../sectionList';
+import { addSection, removeSection, renameSection } from '@/utils/sections/sectionList';
 
 describe('renameSection', () => {
   it('should rename the section with the given ID', () => {

@@ -4,11 +4,11 @@ import { Button, ButtonVariant } from '../Button';
 import { scrollToBottom } from '@/utils/dom';
 import { Section } from '../Section';
 import { DropResult } from 'react-beautiful-dnd';
-import { addSection, removeSection, renameSection } from '@/utils/sectionList';
 import { useAppContext } from '@/context/AppContext';
 import dynamic from 'next/dynamic';
-import { reorderItems } from '@/utils/sectionItem';
 import { useEditableContent } from '@/hooks/useEditableContent';
+import { reorderItems } from '@/utils/sections/sectionItem';
+import { addSection, removeSection, renameSection } from '@/utils/sections/sectionList';
 
 // Disables loading react-beautiful-dnd modules in the SSR mode
 // to fix `data-rbd-draggable-context-id` did not match

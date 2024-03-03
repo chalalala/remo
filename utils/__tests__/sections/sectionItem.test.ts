@@ -1,5 +1,5 @@
 import { Section } from '@/types/Resource';
-import { addItem, removeItem, reorderItems, updateItem } from '../sectionItem';
+import { addItem, removeItem, reorderItems, updateItem } from '@/utils/sections/sectionItem';
 import { DropResult } from 'react-beautiful-dnd';
 
 describe('reorderItems', () => {
