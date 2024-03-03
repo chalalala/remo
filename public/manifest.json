@@ -22,7 +22,10 @@
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAva8lgrM0ejhti3aTDyIry3tR2JjHEKIL3RJPPyFJh2VPWxSeEr//RhEJRDLIqK44wmKMeGOOIgvO57yN068xBbCPDazX95qfn/etVIxZHdIIf42YNKCDC+CCZLbJS7jwQEHGHP2yofWPDygQXOSjQg+Eru9/YcmY9XZ/6MTTLO2C2th45tuL1zpnTAAsB7jaK6aJ7WG5NJL2PHNPteMr+aZRA/mw0Wq6hQxnmgN5cg346Ng3fPgsC26SoqhRp/HspDplA6P9k2gQwBz/Kw5aFLvjI68MEUL/EgxtEjw4PLNO1CmE4WLvQsXMh3OHOl8QDXG8pG6g3xWLcu2gTEE/twIDAQAB",
   "oauth2": {
     "client_id": "706018744847-8lqkshn53bk1agi46odagees6v13i2dd.apps.googleusercontent.com",
-    "scopes": ["https://www.googleapis.com/auth/drive.file"]
+    "scopes": [
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.readonly"
+    ]
   },
   "permissions": ["identity"]
 }

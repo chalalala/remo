@@ -4,7 +4,8 @@ import { setCookie } from '@/utils/cookies';
 import Script from 'next/script';
 import { FC, useCallback } from 'react';
 
-const SCOPE = 'https://www.googleapis.com/auth/drive.file';
+const SCOPE =
+  'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.readonly';
 
 export const GoogleApiScript: FC = () => {
   const { setGoogleAuth, setAccessToken } = useAppContext();
