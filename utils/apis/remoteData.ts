@@ -36,7 +36,7 @@ export const backupData = async (data: Section[]) => {
   const fileRes = await findFiles(config.FILE_NAME, config.FILE_TYPE);
 
   // If file exists, update file content by fileId
-  if (fileRes.files?.length) {
+  if (fileRes?.files?.length) {
     const file = fileRes.files[0];
 
     await updateFile(file.id, data);
@@ -47,10 +47,10 @@ export const backupData = async (data: Section[]) => {
     let folderId;
 
     // If no parent folder exsits, create new folder
-    if (!folderRes.files?.length) {
+    if (!folderRes?.files?.length) {
       const createFolderRes = await createFolder(config.FOLDER_NAME);
 
-      folderId = createFolderRes.id;
+      folderId = createFolderRes?.id;
     }
     // If parent folder exists, get parent folder ID
     else {

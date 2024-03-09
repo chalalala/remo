@@ -9,6 +9,7 @@ import {
   PropsWithChildren,
   SetStateAction,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -43,14 +44,17 @@ export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
     mutate,
   } = useSWRImmutable('backupData', readBackupData);
 
-  const setSections = async (data: Section[]) => {
-    mutate(backupData(data), {
-      optimisticData: data,
-      rollbackOnError: true,
-      populateCache: true,
-      revalidate: false,
-    });
-  };
+  const setSections = useCallback(
+    async (data: Section[]) => {
+      mutate(backupData(data), {
+        optimisticData: data,
+        rollbackOnError: true,
+        populateCache: true,
+        revalidate: false,
+      });
+    },
+    [mutate],
+  );
 
   useEffect(() => {
     if (isExtension()) {
