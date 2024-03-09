@@ -73,10 +73,6 @@ export const SectionList: FC<Props> = () => {
     }
   }, [listRef, sections.length, newSectionName]);
 
-  if (!sections?.length) {
-    return <p className="text-sm">No section existed.</p>;
-  }
-
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div
@@ -100,7 +96,7 @@ export const SectionList: FC<Props> = () => {
           />
         ) : null}
 
-        <div className="sticky bottom-0 bg-white pb-4 pt-1.5">
+        <div className="sticky bottom-0 bg-white pt-1.5">
           <Button
             variant={ButtonVariant.DASHED}
             onClick={openAddNewSection}

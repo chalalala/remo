@@ -1,5 +1,6 @@
 import { cookieKey } from '@/constants/cookies';
 import { Section } from '@/types/Resource';
+import { backupData, readBackupData } from '@/utils/apis/remoteData';
 import { getCookie } from '@/utils/cookies';
 import { isExtension } from '@/utils/env';
 import {
@@ -12,6 +13,7 @@ import {
   useEffect,
   useState,
 } from 'react';
+import useSWRImmutable from 'swr/immutable';
 
 type GoogleAuth = ReturnType<typeof window.google.accounts.oauth2.initTokenClient>;
 
@@ -20,9 +22,10 @@ interface AppContextValue {
   sections: Section[];
   googleAuth: GoogleAuth | undefined;
   accessToken: string;
+  error: unknown;
 
   // Actions
-  setSections: Dispatch<SetStateAction<Section[]>>;
+  setSections: (sections: Section[]) => void;
   setGoogleAuth: Dispatch<SetStateAction<GoogleAuth | undefined>>;
   setAccessToken: Dispatch<SetStateAction<string>>;
 }
@@ -32,31 +35,16 @@ const AppContext = createContext<AppContextValue>({} as never);
 export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const [googleAuth, setGoogleAuth] = useState<GoogleAuth>();
   const [accessToken, setAccessToken] = useState('');
-  const [sections, setSections] = useState<Section[]>(() => [
-    {
-      id: 'section1',
-      name: 'Item with a very very very very very very very very very very very very long name',
-      items: [
-        {
-          id: 'test1',
-          url: 'https://google.com',
-          name: 'Item 1',
-          icon: '',
-        },
-        {
-          id: 'test2',
-          name: 'Item 2 with a very very very very very very very very very very very very long name',
-          url: '',
-          icon: '',
-        },
-      ],
-    },
-    {
-      id: 'section2',
-      name: 'Item 2',
-      items: [],
-    },
-  ]);
+  const { data: sections, error, mutate } = useSWRImmutable('backupData', readBackupData);
+
+  const setSections = async (data: Section[]) => {
+    mutate(backupData(data), {
+      optimisticData: data,
+      rollbackOnError: true,
+      populateCache: true,
+      revalidate: false,
+    });
+  };
 
   useEffect(() => {
     if (isExtension()) {
@@ -78,9 +66,10 @@ export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const contextValue: AppContextValue = {
     // States
-    sections,
+    sections: sections || [],
     googleAuth,
     accessToken,
+    error,
 
     // Actions
     setSections,

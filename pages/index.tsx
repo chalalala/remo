@@ -12,7 +12,7 @@ const Home: NextPageWithLayout = () => {
   return (
     <Layout type={accessToken ? 'main' : 'account'}>
       {accessToken ? (
-        <div className="px-6 pt-4">
+        <div className="px-6 py-4">
           <SectionList />
         </div>
       ) : (
