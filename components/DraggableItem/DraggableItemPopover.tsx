@@ -48,7 +48,7 @@ export const DraggableItemPopover: FC<Props> = ({
       <PopoverTrigger>
         {url ? (
           <Image
-            src={icon || '/svgs/earth.svg'}
+            src={icon || '/icons/earth.svg'}
             alt={title}
             className="h-4 w-4"
           />
