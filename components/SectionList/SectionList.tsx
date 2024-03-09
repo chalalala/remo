@@ -9,6 +9,7 @@ import dynamic from 'next/dynamic';
 import { useEditableContent } from '@/hooks/useEditableContent';
 import { reorderItems } from '@/utils/sections/sectionItem';
 import { addSection, removeSection, renameSection } from '@/utils/sections/sectionList';
+import { Loader } from '../Loader';
 
 // Disables loading react-beautiful-dnd modules in the SSR mode
 // to fix `data-rbd-draggable-context-id` did not match
@@ -24,7 +25,7 @@ interface Props {}
 
 export const SectionList: FC<Props> = () => {
   const listRef = useRef<HTMLDivElement>(null);
-  const { sections, setSections } = useAppContext();
+  const { sections, isLoading, setSections } = useAppContext();
   const {
     name: newSectionName,
     setName: setNewSectionName,
@@ -72,6 +73,10 @@ export const SectionList: FC<Props> = () => {
       scrollToBottom(listRef.current);
     }
   }, [listRef, sections.length, newSectionName]);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>

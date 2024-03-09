@@ -23,6 +23,7 @@ interface AppContextValue {
   googleAuth: GoogleAuth | undefined;
   accessToken: string;
   error: unknown;
+  isLoading: boolean;
 
   // Actions
   setSections: (sections: Section[]) => void;
@@ -35,7 +36,12 @@ const AppContext = createContext<AppContextValue>({} as never);
 export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const [googleAuth, setGoogleAuth] = useState<GoogleAuth>();
   const [accessToken, setAccessToken] = useState('');
-  const { data: sections, error, mutate } = useSWRImmutable('backupData', readBackupData);
+  const {
+    data: sections,
+    error,
+    isLoading,
+    mutate,
+  } = useSWRImmutable('backupData', readBackupData);
 
   const setSections = async (data: Section[]) => {
     mutate(backupData(data), {
@@ -70,6 +76,7 @@ export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
     googleAuth,
     accessToken,
     error,
+    isLoading,
 
     // Actions
     setSections,

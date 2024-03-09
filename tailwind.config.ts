@@ -33,7 +33,7 @@ const config = {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
+          DEFAULT: 'var(--primary)',
           foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
@@ -61,6 +61,9 @@ const config = {
           foreground: 'hsl(var(--card-foreground))',
         },
       },
+      boxShadow: {
+        loader: '-16px 0 #FFF, 16px 0 #FFF',
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
@@ -75,10 +78,36 @@ const config = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        loading: {
+          '33%': {
+            background: '#FFF',
+            boxShadow: '-16px 0 var(--primary), 16px 0 #FFF',
+          },
+          '66%': {
+            background: 'var(--primary)',
+            boxShadow: '-16px 0 #FFF, 16px 0 #FFF',
+          },
+          '100%': {
+            background: '#FFF',
+            boxShadow: '-16px 0 #FFF, 16px 0 var(--primary)',
+          },
+        },
+        'gradient-x': {
+          '0%, 100%': {
+            'background-size': '200% 200%',
+            'background-position': 'left center',
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        loading: 'loading 2s linear infinite',
+        'gradient-x': 'gradient-x 2s ease infinite',
       },
     },
   },
