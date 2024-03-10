@@ -7,9 +7,14 @@ const customJestConfig: Config = {
   preset: 'ts-jest',
   testPathIgnorePatterns: ['<rootDir>/node_modules'],
   testEnvironment: 'jest-environment-jsdom',
-  modulePaths: ['<rootDir>/app'],
+  modulePaths: ['<rootDir>'],
   coverageThreshold: {
-    global: {},
+    global: {
+      branches: 0,
+      functions: 0,
+      lines: 0,
+      statements: 0,
+    },
     './utils/': {
       branches: 50,
       functions: 80,

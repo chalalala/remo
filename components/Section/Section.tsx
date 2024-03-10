@@ -21,7 +21,7 @@ export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection }) 
     openAdd: openAddNewItem,
   } = useEditableContent();
 
-  const onAddNewItem = (value: string) => {
+  const onAddNewItem = async (value: string) => {
     setNewItemName(null);
 
     // Not to add new item if the name is empty
@@ -29,7 +29,7 @@ export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection }) 
       return;
     }
 
-    const newSections = addItem(sections, section.id, value);
+    const newSections = await addItem(sections, section.id, value);
 
     setSections(newSections);
   };

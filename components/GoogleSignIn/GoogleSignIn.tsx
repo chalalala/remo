@@ -26,7 +26,7 @@ export const GoogleSignIn: FC = () => {
 
   return (
     <div className="flex flex-col items-center space-y-5 p-12">
-      <div className="space-y-2">
+      <div className="space-y-2 text-center">
         <div className="flex items-center justify-center gap-2 text-2xl font-bold">
           <span>Welcome to</span>
           <Image
@@ -34,6 +34,7 @@ export const GoogleSignIn: FC = () => {
             alt="logo"
           />
         </div>
+        <p className="text-sm font-medium leading-normal">A simple resource manager</p>
       </div>
 
       <button
@@ -48,7 +49,7 @@ export const GoogleSignIn: FC = () => {
             height={18}
           />
         </span>
-        <span className="flex items-center rounded-r bg-indigo-500 px-3 text-sm font-bold text-white">
+        <span className="flex items-center rounded-r bg-indigo-500 px-3 text-sm font-medium text-white">
           Sign in with Google
         </span>
       </button>

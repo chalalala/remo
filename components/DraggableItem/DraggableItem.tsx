@@ -35,7 +35,7 @@ export const DraggableItem: FC<Props> = ({
     <div className="flex min-w-0 items-center gap-2 show-child-on-hover">
       <span className="shrink-0">
         <Image
-          src="/svgs/draggable.svg"
+          src="/icons/draggable.svg"
           alt="Draggable"
           className="h-4 w-4"
         />
