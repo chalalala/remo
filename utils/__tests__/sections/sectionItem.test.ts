@@ -171,8 +171,8 @@ describe('addItem', () => {
     },
   ];
 
-  it('should add a new item to the section with the given ID', () => {
-    const newSections = addItem(sections, '1', 'New Item');
+  it('should add a new item to the section with the given ID', async () => {
+    const newSections = await addItem(sections, '1', 'New Item');
 
     expect(newSections).toEqual([
       {
@@ -196,8 +196,8 @@ describe('addItem', () => {
     ]);
   });
 
-  it('should return the original list if section ID is not found', () => {
-    const newSections = addItem(sections, 'not found', 'New Item');
+  it('should return the original list if section ID is not found', async () => {
+    const newSections = await addItem(sections, 'not found', 'New Item');
 
     expect(newSections).toEqual(sections);
   });

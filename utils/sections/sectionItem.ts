@@ -1,6 +1,7 @@
 import { Section, SectionItem } from '@/types/Resource';
 import { generateId } from '../string';
 import { DropResult } from 'react-beautiful-dnd';
+import { isExtension } from '../env';
 
 /**
  * Reorders the items in the sections array based on the provided drop result.
@@ -36,7 +37,7 @@ export const reorderItems = (sections: Section[], dropResult: DropResult) => {
   return modifiedSections;
 };
 
-export const addItem = (sections: Section[], sectionId: string, name: string) => {
+export const addItem = async (sections: Section[], sectionId: string, name: string) => {
   const sectionIdx = sections.findIndex((section) => section.id === sectionId);
 
   if (sectionIdx === -1) {
@@ -57,6 +58,14 @@ export const addItem = (sections: Section[], sectionId: string, name: string) =>
     icon: '',
     url: '',
   };
+
+  if (isExtension()) {
+    const queryOptions = { active: true, currentWindow: true };
+
+    const [tab] = await chrome.tabs.query(queryOptions);
+
+    newItem.url = tab?.url || '';
+  }
 
   const newSections = JSON.parse(JSON.stringify(sections));
 
