@@ -51,7 +51,7 @@ jobs:
           with:
             version: 8.6.10
         - run: pnpm install
-        - uses: ArtiomTr/jest-coverage-report-action@v2
+        - uses: ArtiomTr/jest-coverage-report-action@v2.3.0
           with:
             package-manager: pnpm
             skip-step: install
