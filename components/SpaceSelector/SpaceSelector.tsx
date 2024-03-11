@@ -8,6 +8,7 @@ import { useAppContext } from '@/context/AppContext';
 import { useRemoteData } from '@/hooks/useRemoteData';
 import { createNewSpace } from '@/utils/sections/space';
 import { localStorageKey } from '@/constants/local-storage';
+import clsx from 'clsx';
 
 interface Props {
   className?: string;
@@ -65,7 +66,7 @@ export const SpaceSelector: FC<Props> = ({ className }) => {
             <div
               className={twMerge(
                 'flex items-center justify-between rounded bg-white py-1 pl-3 pr-2',
-                'truncate text-left text-base leading-normal text-gray-500',
+                'truncate text-left text-base leading-normal text-gray-900',
                 className,
               )}
             >
@@ -97,7 +98,7 @@ export const SpaceSelector: FC<Props> = ({ className }) => {
             </CommandEmpty>
 
             {spaces.length ? (
-              <CommandGroup className="max-h-[50vh] overflow-y-auto">
+              <CommandGroup className="max-h-[50vh] overflow-y-auto p-0">
                 {spaces.map((space) => (
                   <CommandItem
                     key={space.id}
@@ -105,7 +106,10 @@ export const SpaceSelector: FC<Props> = ({ className }) => {
                     onSelect={() => {
                       selectSpace(space.id);
                     }}
-                    className="hover:bg-indigo-50 aria-selected:bg-indigo-50 data-[disabled]:pointer-events-auto"
+                    className={clsx(
+                      'text-sm leading-normal text-gray-900',
+                      'hover:bg-indigo-50 aria-selected:bg-indigo-50 data-[disabled]:pointer-events-auto',
+                    )}
                   >
                     {space.name}
                   </CommandItem>
