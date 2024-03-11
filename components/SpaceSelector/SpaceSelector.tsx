@@ -97,7 +97,7 @@ export const SpaceSelector: FC<Props> = ({ className }) => {
             </CommandEmpty>
 
             {spaces.length ? (
-              <CommandGroup>
+              <CommandGroup className="max-h-[50vh] overflow-y-auto">
                 {spaces.map((space) => (
                   <CommandItem
                     key={space.id}
