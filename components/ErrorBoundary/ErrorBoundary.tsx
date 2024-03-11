@@ -1,6 +1,6 @@
 import { Component, PropsWithChildren } from 'react';
-import { Image } from '../Image';
 import { Layout } from '../Layout';
+import { Error } from '../Error';
 
 interface Props {}
 
@@ -26,15 +26,7 @@ class ErrorBoundary extends Component<PropsWithChildren<Props>> {
     if (state.hasError) {
       return (
         <Layout type="account">
-          <div className="flex flex-col items-center gap-2 py-12">
-            <Image
-              src="/icons/remo-cry.svg"
-              alt="Error"
-            />
-            <h2 className="text-2xl font-medium leading-normal text-red-600">
-              Oops, there is an error!
-            </h2>
-          </div>
+          <Error />
         </Layout>
       );
     }
