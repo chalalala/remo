@@ -42,7 +42,7 @@ export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
     error,
     isLoading,
     mutate,
-  } = useSWRImmutable('backupData', readBackupData);
+  } = useSWRImmutable(['backupData', accessToken], readBackupData);
 
   const setSections = useCallback(
     async (data: Section[]) => {
