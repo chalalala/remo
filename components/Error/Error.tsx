@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { Image } from '../Image';
+import { Button, ButtonVariant } from '../Button';
 
 export const Error: FC = () => {
   return (
@@ -9,6 +10,13 @@ export const Error: FC = () => {
         alt="Error"
       />
       <h2 className="text-2xl font-medium leading-normal text-red-600">Oops, there is an error!</h2>
+      <Button
+        variant={ButtonVariant.SOLID}
+        onClick={window.location.reload}
+        className="bg-primary px-4 py-1.5 text-sm font-medium uppercase leading-normal text-white"
+      >
+        Reload
+      </Button>
     </div>
   );
 };

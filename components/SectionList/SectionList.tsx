@@ -25,7 +25,7 @@ interface Props {}
 
 export const SectionList: FC<Props> = () => {
   const listRef = useRef<HTMLDivElement>(null);
-  const { sections, isLoading, setSections } = useAppContext();
+  const { sections, isLoading, selectedSpace, setSections } = useAppContext();
   const {
     name: newSectionName,
     setName: setNewSectionName,
@@ -76,6 +76,14 @@ export const SectionList: FC<Props> = () => {
 
   if (isLoading) {
     return <Loader />;
+  }
+
+  if (!selectedSpace) {
+    return (
+      <p className="text-sm font-medium leading-normal">
+        No space existed. Add new space to get started ☝️
+      </p>
+    );
   }
 
   return (

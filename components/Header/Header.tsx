@@ -1,6 +1,7 @@
 import { DotsVerticalIcon, FolderIcon } from '@heroicons/react/solid';
 import React, { FC } from 'react';
 import { IconButton } from '../IconButton';
+import { SpaceSelector } from '../SpaceSelector';
 
 interface Props {
   variant?: 'default' | 'minimal';
@@ -17,7 +18,7 @@ export const Header: FC<Props> = ({ variant = 'default' }) => {
         <FolderIcon className="mx-2 h-5 w-5" />
         <span className="text-sm font-medium uppercase">Space</span>
       </div>
-      <span className="flex-1">Space selector</span> {/* TODO: Implement space selector */}
+      <SpaceSelector className="flex-1" />
       <IconButton className="w-6">
         <DotsVerticalIcon />
       </IconButton>

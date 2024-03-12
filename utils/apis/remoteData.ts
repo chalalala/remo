@@ -6,7 +6,7 @@ import {
   updateFile,
   writeFile,
 } from '@/lib/googleDrive';
-import { Section } from '@/types/Resource';
+import { Space } from '@/types/Resource';
 
 const config = {
   FOLDER_NAME: 'REMO - Resource Manager App',
@@ -26,13 +26,13 @@ export const readBackupData = async () => {
       return [];
     }
 
-    return fileContent;
+    return fileContent as Space[];
   }
 
   return [];
 };
 
-export const backupData = async (data: Section[]) => {
+export const backupData = async (data: Space[]) => {
   const fileRes = await findFiles(config.FILE_NAME, config.FILE_TYPE);
 
   // If file exists, update file content by fileId
