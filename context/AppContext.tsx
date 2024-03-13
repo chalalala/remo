@@ -43,14 +43,15 @@ export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const [accessToken, setAccessToken] = useState('');
   const { spaces, error, isLoading, mutate } = useRemoteData(accessToken);
   const [selectedSpaceId, setSelectedSpaceId] = useState<string>('');
+  const [localStorageData, setLocalStorageData] = useState<Space[]>([]);
 
   const selectedSpace = useMemo(() => {
     if (isLoading) {
-      return;
+      return localStorageData.find((space) => space.id === selectedSpaceId);
     }
 
     return spaces.find((space) => space.id === selectedSpaceId);
-  }, [isLoading, spaces, selectedSpaceId]);
+  }, [isLoading, localStorageData, spaces, selectedSpaceId]);
 
   const sections = useMemo(() => selectedSpace?.sections || [], [selectedSpace]);
 
@@ -77,6 +78,15 @@ export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 
   useEffect(() => {
+    const localData = localStorage.getItem(localStorageKey.LOCAL_DATA);
+
+    try {
+      setLocalStorageData(localData ? JSON.parse(localData) : []);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
+
     if (isExtension()) {
       chrome.identity.getAuthToken({ interactive: true }, (token) => {
         if (token) {
@@ -96,6 +106,8 @@ export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     const lastUsedSpaceId = localStorage.getItem(localStorageKey.LAST_SPACE_ID);
+
+    localStorage.setItem(localStorageKey.LOCAL_DATA, JSON.stringify(spaces));
 
     setSelectedSpaceId(lastUsedSpaceId || spaces[0]?.id);
   }, [spaces]);
