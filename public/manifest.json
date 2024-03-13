@@ -27,6 +27,5 @@
       "https://www.googleapis.com/auth/drive.readonly"
     ]
   },
-  "host_permissions": ["http://*/*", "https://*/*"],
-  "permissions": ["identity", "tabs", "activeTab"]
+  "permissions": ["identity", "tabs"]
 }
