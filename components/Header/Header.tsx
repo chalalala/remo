@@ -9,7 +9,9 @@ interface Props {
 
 export const Header: FC<Props> = ({ variant = 'default' }) => {
   if (variant === 'minimal') {
-    return <header className="sticky top-0 h-12 bg-indigo-500 p-4 text-white"></header>;
+    return (
+      <header className="sticky top-0 h-12 bg-indigo-500 p-4 text-white desktop:hidden"></header>
+    );
   }
 
   return (
