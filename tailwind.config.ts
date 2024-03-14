@@ -110,6 +110,9 @@ const config = {
         'gradient-x': 'gradient-x 2s ease infinite',
       },
     },
+    screens: {
+      desktop: '768px',
+    },
   },
   plugins: [
     plugin(({ addUtilities }) => {
