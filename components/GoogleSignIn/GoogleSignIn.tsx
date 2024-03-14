@@ -25,16 +25,31 @@ export const GoogleSignIn: FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-5 p-12">
+    <div className="flex flex-col items-center space-y-5 p-12 desktop:h-full desktop:justify-center">
       <div className="space-y-2 text-center">
-        <div className="flex items-center justify-center gap-2 text-2xl font-bold">
-          <span>Welcome to</span>
-          <Image
-            src="/icons/logoWithName.svg"
-            alt="logo"
-          />
+        <div className="flex flex-wrap items-center justify-center gap-2 desktop:flex-col desktop:gap-4">
+          <div className="desktop:order-1 desktop:flex desktop:gap-2">
+            <span className="text-2xl font-bold desktop:text-4xl">Welcome to</span>
+            <span className="hidden font-bold text-indigo-500 desktop:block desktop:text-4xl">
+              REMO 🎉
+            </span>
+          </div>
+          <picture>
+            <source
+              media="(min-width: 768px)"
+              srcSet="/icons/logo.svg"
+              width={120}
+            />
+
+            <img
+              src="/icons/logoWithName.svg"
+              alt="logo"
+            />
+          </picture>
         </div>
-        <p className="text-sm font-medium leading-normal">A simple resource manager</p>
+        <p className="text-sm font-medium leading-normal desktop:text-xl">
+          A simple resource manager
+        </p>
       </div>
 
       <button
