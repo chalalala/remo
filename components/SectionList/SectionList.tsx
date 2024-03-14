@@ -81,7 +81,7 @@ export const SectionList: FC<Props> = () => {
   if (!selectedSpace) {
     return (
       <p className="text-sm font-medium leading-normal">
-        No space existed. Add new space to get started ☝️
+        No space selected. Add or select a space to get started ☝️
       </p>
     );
   }

@@ -88,7 +88,7 @@ export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
     }
 
     if (isExtension()) {
-      chrome.identity.getAuthToken({ interactive: true }, (token) => {
+      chrome.identity.getAuthToken({ interactive: false }, (token) => {
         if (token) {
           setAccessToken(token);
         }
