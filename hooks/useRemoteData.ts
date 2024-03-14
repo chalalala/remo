@@ -9,7 +9,9 @@ export const useRemoteData = (accessToken: string) => {
     mutate: swrMutate,
     error,
     isLoading,
-  } = useSWRImmutable(accessToken ? ['backupData', accessToken] : undefined, readBackupData);
+  } = useSWRImmutable(accessToken ? ['backupData', accessToken] : undefined, readBackupData, {
+    keepPreviousData: true,
+  });
 
   const mutate = useCallback(
     (data: Space[]) => {
