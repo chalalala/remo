@@ -12,6 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
+import { WEB_URL } from '@/constants/config';
+import { isExtension } from '@/utils/env';
 
 export const HeaderOptions: FC = () => {
   const [open, setOpen] = useState(false);
@@ -45,6 +47,22 @@ export const HeaderOptions: FC = () => {
         align="end"
         className="p-0"
       >
+        {isExtension() ? (
+          <>
+            <DropdownMenuItem className="cursor-pointer">
+              <a
+                href={WEB_URL}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open on web
+              </a>
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator className="my-0" />
+          </>
+        ) : null}
+
         <DropdownMenuItem
           className="cursor-pointer"
           onClick={onRemove}
