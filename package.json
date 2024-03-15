@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && npm run lint",
-    "build:extension": "next build && npm run lint:build",
+    "build": "next build && npm run lint:build",
+    "build:web": "next build && npm run lint",
     "lint:build": "mv out/_next out/assets && sed -i -e 's+/_next+./assets+g' out/**.html && rsync -va --delete-after out/ ./extension/ && rm -rf out",
     "start": "next start",
     "test": "jest --verbose",
