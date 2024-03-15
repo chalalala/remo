@@ -5,7 +5,7 @@ import { DraggableItem } from '../DraggableItem';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { useEditableContent } from '@/hooks/useEditableContent';
 import { useAppContext } from '@/context/AppContext';
-import { addItem, removeItem } from '@/utils/sections/sectionItem';
+import { addItem, removeItem, updateItem } from '@/utils/sections/sectionItem';
 
 interface Props {
   section: SectionType;
@@ -36,6 +36,12 @@ export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection }) 
 
   const onRemoveItem = (itemId: string) => {
     const newSections = removeItem(sections, section.id, itemId);
+
+    setSections(newSections);
+  };
+
+  const onRenameItem = (itemId: string, value: string) => {
+    const newSections = updateItem(sections, section.id, itemId, { name: value });
 
     setSections(newSections);
   };
@@ -84,6 +90,7 @@ export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection }) 
                       title={item.name}
                       url={item.url}
                       onRemove={() => onRemoveItem(item.id)}
+                      onChangeTitle={(value) => onRenameItem(item.id, value)}
                     />
                   </div>
                 )}
