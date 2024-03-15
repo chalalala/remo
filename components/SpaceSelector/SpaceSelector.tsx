@@ -108,7 +108,7 @@ export const SpaceSelector: FC<Props> = ({ className }) => {
                     }}
                     className={clsx(
                       'text-sm leading-normal text-gray-900',
-                      'hover:bg-indigo-50 aria-selected:bg-indigo-50 data-[disabled]:pointer-events-auto',
+                      'cursor-pointer hover:bg-indigo-50 aria-selected:bg-indigo-50 data-[disabled]:pointer-events-auto data-[disabled]:opacity-100',
                     )}
                   >
                     {space.name}
