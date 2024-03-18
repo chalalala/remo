@@ -1,6 +1,17 @@
 import { Section } from '@/types/Resource';
-import { addItem, removeItem, reorderItems, updateItem } from '@/utils/sections/sectionItem';
+import { getSelfHostedFavicon } from '@/utils/apis/getSelfHostedFavicon';
+import {
+  addItem,
+  getFaviconFromURL,
+  removeItem,
+  reorderItems,
+  updateItem,
+} from '@/utils/sections/sectionItem';
 import { DropResult } from 'react-beautiful-dnd';
+
+jest.mock('utils/apis/getSelfHostedFavicon.ts', () => ({
+  getSelfHostedFavicon: jest.fn(),
+}));
 
 describe('reorderItems', () => {
   it('should reorder items within the same section', () => {
@@ -287,5 +298,21 @@ describe('updateItem', () => {
     const newSections = updateItem(sections, '1', 'not-found', { url: 'test' });
 
     expect(newSections).toEqual(sections);
+  });
+});
+
+describe('getFaviconFromURL', () => {
+  it('should return self hosted url if it is valid', async () => {
+    (getSelfHostedFavicon as jest.Mock).mockResolvedValue('test');
+
+    expect(await getFaviconFromURL('https://example.com')).toBe('test');
+  });
+
+  it('should return fallback url if self host url is invalid', async () => {
+    (getSelfHostedFavicon as jest.Mock).mockResolvedValue('');
+
+    expect(await getFaviconFromURL('https://example.com')).toBe(
+      'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://example.com&size=32',
+    );
   });
 });

@@ -3,7 +3,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { CheckIcon, LinkIcon } from '@heroicons/react/solid';
 import { Section } from '@/types/Resource';
 import { Image } from '../Image';
-import { updateItem } from '@/utils/sections/sectionItem';
+import { getFaviconFromURL, updateItem } from '@/utils/sections/sectionItem';
 
 interface Props {
   sections: Section[];
@@ -31,10 +31,13 @@ export const DraggableItemPopover: FC<Props> = ({
     return null;
   }
 
-  const updateUrl = (event: FormEvent<HTMLFormElement>) => {
+  const updateUrl = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const newSections = updateItem(sections, sectionId, itemId, { url: inputValue });
+    const newSections = updateItem(sections, sectionId, itemId, {
+      url: inputValue,
+      icon: await getFaviconFromURL(inputValue || ''),
+    });
 
     setSections(newSections);
     setOpen(false);
