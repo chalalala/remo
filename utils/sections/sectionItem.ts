@@ -2,6 +2,7 @@ import { Section, SectionItem } from '@/types/Resource';
 import { generateId } from '../string';
 import { DropResult } from 'react-beautiful-dnd';
 import { isExtension } from '../env';
+import { getSelfHostedFavicon } from '../apis/getSelfHostedFavicon';
 
 /**
  * Reorders the items in the sections array based on the provided drop result.
@@ -64,7 +65,10 @@ export const addItem = async (sections: Section[], sectionId: string, name: stri
 
     const [tab] = await chrome.tabs.query(queryOptions);
 
-    newItem.url = tab?.url || '';
+    const url = tab?.url || '';
+
+    newItem.url = url;
+    newItem.icon = await getFaviconFromURL(url);
   }
 
   const newSections = JSON.parse(JSON.stringify(sections));
@@ -122,4 +126,14 @@ export const updateItem = (
   };
 
   return newSections;
+};
+
+export const getFaviconFromURL = async (url: string) => {
+  const selfHostedFavicon = await getSelfHostedFavicon(url);
+
+  if (selfHostedFavicon) {
+    return selfHostedFavicon;
+  }
+
+  return `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=32`;
 };
