@@ -32,14 +32,14 @@ export const readBackupData = async () => {
   return [];
 };
 
-export const backupData = async (data: Space[]) => {
+export const backupData = async (data: Space[], signal?: AbortSignal) => {
   const fileRes = await findFiles(config.FILE_NAME, config.FILE_TYPE);
 
   // If file exists, update file content by fileId
   if (fileRes?.files?.length) {
     const file = fileRes.files[0];
 
-    await updateFile(file.id, data);
+    await updateFile(file.id, data, { signal });
   }
   // If no file exists, create new file
   else {

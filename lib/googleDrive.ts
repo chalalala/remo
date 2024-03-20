@@ -129,6 +129,7 @@ export const writeFile = async (
   options?: {
     contentType?: string;
     parents?: string[];
+    signal?: AbortSignal;
   },
 ) => {
   const accessToken = await getAccessToken();
@@ -167,6 +168,7 @@ export const writeFile = async (
       Authorization: 'Bearer ' + accessToken,
     },
     body: form,
+    signal: options?.signal,
   });
 
   const json = await res.json();
@@ -183,6 +185,7 @@ export const updateFile = async (
   content: unknown,
   options?: {
     contentType?: string;
+    signal?: AbortSignal;
   },
 ) => {
   const accessToken = await getAccessToken();
@@ -215,6 +218,7 @@ export const updateFile = async (
         Authorization: 'Bearer ' + accessToken,
       },
       body: form,
+      signal: options?.signal,
     },
   );
 
