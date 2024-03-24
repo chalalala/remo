@@ -1,9 +1,10 @@
 import { Space } from '@/types/Resource';
 import { backupData, readBackupData } from '@/utils/apis/remoteData';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import useSWRImmutable from 'swr/immutable';
 
 export const useRemoteData = (accessToken: string) => {
+  const abortController = useRef<AbortController | undefined>();
   const {
     data,
     mutate: swrMutate,
@@ -15,12 +16,27 @@ export const useRemoteData = (accessToken: string) => {
 
   const mutate = useCallback(
     (data: Space[]) => {
-      swrMutate(backupData(data), {
-        optimisticData: data,
-        rollbackOnError: true,
-        populateCache: true,
-        revalidate: false,
-      });
+      swrMutate(
+        async () => {
+          if (abortController.current) {
+            abortController.current.abort();
+          }
+
+          abortController.current = new AbortController();
+
+          const res = await backupData(data, abortController.current.signal);
+
+          abortController.current = undefined;
+
+          return res;
+        },
+        {
+          optimisticData: data,
+          rollbackOnError: true,
+          populateCache: true,
+          revalidate: false,
+        },
+      );
     },
     [swrMutate],
   );
