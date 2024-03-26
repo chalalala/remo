@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '../ui/command';
@@ -7,8 +7,8 @@ import { CommandInput } from 'cmdk';
 import { useAppContext } from '@/context/AppContext';
 import { useRemoteData } from '@/hooks/useRemoteData';
 import { createNewSpace } from '@/utils/sections/space';
-import { localStorageKey } from '@/constants/local-storage';
 import clsx from 'clsx';
+import { localStorageKey } from '@/constants/local-storage';
 
 interface Props {
   className?: string;
@@ -17,8 +17,8 @@ interface Props {
 export const SpaceSelector: FC<Props> = ({ className }) => {
   const { accessToken, selectedSpace, setSelectedSpaceId } = useAppContext();
   const { spaces, mutate } = useRemoteData(accessToken);
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState('');
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const [isInputFocus, setIsInputFocus] = useState(false);
 
