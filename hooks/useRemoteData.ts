@@ -46,8 +46,9 @@ export const useRemoteData = (accessToken: string) => {
       spaces: data || [],
       error,
       isLoading,
+      refresh: swrMutate,
       mutate,
     }),
-    [data, error, isLoading, mutate],
+    [data, error, isLoading, swrMutate, mutate],
   );
 };

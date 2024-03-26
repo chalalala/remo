@@ -1,13 +1,20 @@
-import { FolderIcon } from '@heroicons/react/solid';
+import { FolderIcon, RefreshIcon } from '@heroicons/react/solid';
 import { FC } from 'react';
 import { SpaceSelector } from '../SpaceSelector';
 import { HeaderOptions } from '../HeaderOptions';
+import { IconButton } from '../IconButton';
+import { useRemoteData } from '@/hooks/useRemoteData';
+import { useAppContext } from '@/context/AppContext';
+import clsx from 'clsx';
 
 interface Props {
   variant?: 'default' | 'minimal';
 }
 
 export const Header: FC<Props> = ({ variant = 'default' }) => {
+  const { accessToken } = useAppContext();
+  const { refresh, isLoading } = useRemoteData(accessToken);
+
   if (variant === 'minimal') {
     return (
       <header className="sticky top-0 h-12 bg-indigo-500 p-4 text-white desktop:hidden"></header>
@@ -21,7 +28,17 @@ export const Header: FC<Props> = ({ variant = 'default' }) => {
         <span className="text-sm font-medium uppercase">Space</span>
       </div>
       <SpaceSelector className="flex-1" />
-      <HeaderOptions />
+      <div className="flex items-center gap-1">
+        <IconButton
+          className={clsx('h-6 w-6 shrink-0', {
+            'animate-spin': isLoading,
+          })}
+          onClick={() => refresh()}
+        >
+          <RefreshIcon />
+        </IconButton>
+        <HeaderOptions />
+      </div>
     </header>
   );
 };
