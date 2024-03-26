@@ -10,6 +10,7 @@ export const useRemoteData = (accessToken: string) => {
     mutate: swrMutate,
     error,
     isLoading,
+    isValidating,
   } = useSWRImmutable(accessToken ? ['backupData', accessToken] : undefined, readBackupData, {
     keepPreviousData: true,
   });
@@ -45,10 +46,10 @@ export const useRemoteData = (accessToken: string) => {
     () => ({
       spaces: data || [],
       error,
-      isLoading,
+      isLoading: isLoading || isValidating,
       refresh: swrMutate,
       mutate,
     }),
-    [data, error, isLoading, swrMutate, mutate],
+    [data, error, isLoading, isValidating, swrMutate, mutate],
   );
 };
