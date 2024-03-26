@@ -6,6 +6,7 @@ import { DraggableItemTextWrapper } from './DraggableItemTextWrapper';
 import { EditableContent } from '../EditableContent';
 import { DraggableItemPopover } from './DraggableItemPopover';
 import { useAppContext } from '@/context/AppContext';
+import clsx from 'clsx';
 
 interface Props {
   sectionId?: string;
@@ -42,7 +43,11 @@ export const DraggableItem: FC<Props> = ({
       </span>
 
       <div className="flex w-full min-w-0 flex-1 items-center justify-between gap-1">
-        <div className="flex min-w-0 shrink-0 items-center gap-1">
+        <div
+          className={clsx('flex min-w-0 shrink-0 items-center gap-1', {
+            'flex-1': isEditing,
+          })}
+        >
           <DraggableItemPopover
             sections={sections}
             setSections={setSections}
@@ -69,7 +74,14 @@ export const DraggableItem: FC<Props> = ({
           />
         </div>
 
-        <div className="flex-1 -translate-y-2 self-stretch border-b border-dashed border-gray-500 child" />
+        <div
+          className={clsx(
+            'flex-1 -translate-y-2 self-stretch border-b border-dashed border-gray-500 child',
+            {
+              hidden: isEditing,
+            },
+          )}
+        />
 
         <div className="shrink-0 items-center leading-none child">
           <IconButton onClick={() => setIsEditing(true)}>

@@ -57,7 +57,7 @@ export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const setSections = useCallback(
     async (data: Section[]) => {
-      if (!selectedSpace) {
+      if (isLoading || !selectedSpace) {
         return;
       }
 
@@ -74,7 +74,7 @@ export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
 
       mutate(newSpaces);
     },
-    [spaces, selectedSpace, mutate],
+    [spaces, selectedSpace, isLoading, mutate],
   );
 
   useEffect(() => {

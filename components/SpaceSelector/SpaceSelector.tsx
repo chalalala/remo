@@ -16,7 +16,7 @@ interface Props {
 
 export const SpaceSelector: FC<Props> = ({ className }) => {
   const { accessToken, selectedSpace, setSelectedSpaceId } = useAppContext();
-  const { spaces, mutate } = useRemoteData(accessToken);
+  const { spaces, isLoading, mutate } = useRemoteData(accessToken);
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -45,7 +45,7 @@ export const SpaceSelector: FC<Props> = ({ className }) => {
   };
 
   const addNewSpace = async () => {
-    if (!value) {
+    if (isLoading || !value) {
       return;
     }
 

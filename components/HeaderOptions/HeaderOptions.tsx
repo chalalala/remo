@@ -18,9 +18,13 @@ import { isExtension } from '@/utils/env';
 export const HeaderOptions: FC = () => {
   const [open, setOpen] = useState(false);
   const { spaces, selectedSpace, accessToken, setAccessToken } = useAppContext();
-  const { mutate } = useRemoteData(accessToken);
+  const { isLoading, mutate } = useRemoteData(accessToken);
 
   const onRemove = () => {
+    if (isLoading) {
+      return;
+    }
+
     const newSpaces = removeSpace(spaces, selectedSpace?.id || '');
 
     mutate(newSpaces);
