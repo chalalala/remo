@@ -74,7 +74,7 @@ export const SectionList: FC<Props> = () => {
     }
   }, [listRef, sections.length, newSectionName]);
 
-  if (isLoading && !sections.length) {
+  if (isLoading) {
     return <Loader />;
   }
 
