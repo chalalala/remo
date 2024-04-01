@@ -41,7 +41,7 @@ export const HeaderOptions: FC = () => {
       open={open}
       onOpenChange={setOpen}
     >
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
         <IconButton className="h-6 w-6 shrink-0">
           <DotsVerticalIcon />
         </IconButton>
