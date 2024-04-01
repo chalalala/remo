@@ -6,12 +6,11 @@ import {
   updateFile,
   writeFile,
 } from '@/lib/googleDrive';
-import { Space } from '@/types/Resource';
 
 const config = {
   FOLDER_NAME: 'REMO - Resource Manager App',
-  FILE_NAME: 'remo_backup.json',
-  FILE_TYPE: 'application/json',
+  FILE_NAME: 'database.db',
+  FILE_TYPE: 'application/octet-stream',
 };
 
 export const readBackupData = async () => {
@@ -22,24 +21,20 @@ export const readBackupData = async () => {
 
     const fileContent = await getFileContent(file.id);
 
-    if (!fileContent) {
-      return [];
-    }
-
-    return fileContent as Space[];
+    return fileContent.arrayBuffer();
   }
 
-  return [];
+  return;
 };
 
-export const backupData = async (data: Space[], signal?: AbortSignal) => {
+export const backupData = async (data: ArrayBufferLike, signal?: AbortSignal) => {
   const fileRes = await findFiles(config.FILE_NAME, config.FILE_TYPE);
 
   // If file exists, update file content by fileId
   if (fileRes?.files?.length) {
     const file = fileRes.files[0];
 
-    await updateFile(file.id, data, { signal });
+    await updateFile(file.id, data, { contentType: 'application/octet-stream', signal });
   }
   // If no file exists, create new file
   else {
@@ -58,7 +53,8 @@ export const backupData = async (data: Space[], signal?: AbortSignal) => {
     }
 
     // Add file to parent folder
-    await writeFile(config.FILE_NAME, data, {
+    writeFile(config.FILE_NAME, data, {
+      contentType: 'application/octet-stream',
       parents: [folderId],
     });
   }

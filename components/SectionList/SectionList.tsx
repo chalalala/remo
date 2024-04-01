@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react';
+import { FC, useEffect, useMemo, useRef } from 'react';
 import { EditableAccordion } from '../EditableAccordion';
 import { Button, ButtonVariant } from '../Button';
 import { scrollToBottom } from '@/utils/dom';
@@ -7,9 +7,11 @@ import { DropResult } from 'react-beautiful-dnd';
 import { useAppContext } from '@/context/AppContext';
 import dynamic from 'next/dynamic';
 import { useEditableContent } from '@/hooks/useEditableContent';
-import { reorderItems } from '@/utils/sections/sectionItem';
-import { addSection, removeSection, renameSection } from '@/utils/sections/sectionList';
 import { Loader } from '../Loader';
+import { useDatabaseQuery } from '@/hooks/useDatabaseQuery';
+import { sqlQuery } from '@/constants/queries';
+import { Section as ISection, SectionItem } from '@/types/Resource';
+import { useRemoteData } from '@/hooks/useRemoteData';
 
 // Disables loading react-beautiful-dnd modules in the SSR mode
 // to fix `data-rbd-draggable-context-id` did not match
@@ -25,7 +27,17 @@ interface Props {}
 
 export const SectionList: FC<Props> = () => {
   const listRef = useRef<HTMLDivElement>(null);
-  const { sections, isLoading, selectedSpace, setSections } = useAppContext();
+  const { db, accessToken, isLoading, selectedSpaceId } = useAppContext();
+  const { getQueryResultAsJson } = useDatabaseQuery();
+  const { mutate } = useRemoteData(accessToken);
+  const sections = useMemo(() => {
+    return selectedSpaceId
+      ? getQueryResultAsJson<ISection>(sqlQuery.SELECT_SECTIONS, {
+          ':spaceId': selectedSpaceId,
+        })
+      : [];
+  }, [selectedSpaceId, getQueryResultAsJson]);
+
   const {
     name: newSectionName,
     setName: setNewSectionName,
@@ -33,38 +45,87 @@ export const SectionList: FC<Props> = () => {
   } = useEditableContent();
 
   const onRenameSection = (sectionId: string, value: string) => {
-    const newSections = renameSection(sections, sectionId, value);
+    if (!db) {
+      return;
+    }
 
-    setSections(newSections);
+    db.exec(sqlQuery.RENAME_SECTION, {
+      ':name': value,
+      ':sectionId': sectionId,
+    });
+
+    mutate(db.export().buffer);
   };
 
   const onRemoveSection = (sectionId: string) => {
-    const newSections = removeSection(sections, sectionId);
+    if (!db) {
+      return;
+    }
 
-    setSections(newSections);
+    db.exec(sqlQuery.DELETE_SECTION, {
+      ':sectionId': sectionId,
+    });
+
+    mutate(db.export().buffer);
   };
 
   const onAddNewSection = (value: string) => {
     setNewSectionName(null);
 
     // Not to add new section if the name is empty
-    if (!value) {
+    if (!value || !db) {
       return;
     }
 
-    const newSections = addSection(sections, value);
+    db.exec(sqlQuery.INSERT_SECTION, {
+      ':name': value,
+      ':spaceId': selectedSpaceId,
+    });
 
-    setSections(newSections);
+    mutate(db.export().buffer);
   };
 
   const onDragEnd = (result: DropResult) => {
-    if (!result.destination) {
-      return sections;
+    if (!result.destination || !db) {
+      return;
     }
 
-    const modifiedSections = reorderItems(sections, result);
+    const { index: sourceIdx, droppableId: sourceSection } = result.source;
+    const { index: targetIdx, droppableId: targetSection } = result.destination;
 
-    setSections(modifiedSections);
+    const [sourceItem] = getQueryResultAsJson<SectionItem>(
+      sqlQuery.GET_SECTION_ITEM_SOURCE_BY_INDEX,
+      {
+        ':sectionId': sourceSection,
+        ':index': sourceIdx,
+      },
+    );
+
+    const [targetItem] = getQueryResultAsJson<SectionItem | undefined>(
+      sqlQuery.GET_SECTION_ITEM_SOURCE_BY_INDEX,
+      {
+        ':sectionId': targetSection,
+        ':index': targetIdx,
+      },
+    );
+
+    if (sourceSection !== targetSection) {
+      db.exec(sqlQuery.CHANGE_SECTION_WITH_ITEM_SEQ, {
+        ':sectionItemSeq': sourceItem.seq,
+        ':sourceSection': sourceSection,
+        ':targetSection': targetSection,
+      });
+    }
+
+    // TODO: update seq of the source item after changing section
+
+    db.exec(sqlQuery.REORDER_SECTION_ITEM, {
+      ':sourceSeq': sourceItem.seq,
+      ':targetSeq': targetItem?.seq || 0,
+      ':sourceSection': sourceSection,
+    });
+
+    mutate(db.export().buffer);
   };
 
   // Pin scroll to the bottom
@@ -78,7 +139,7 @@ export const SectionList: FC<Props> = () => {
     return <Loader />;
   }
 
-  if (!selectedSpace) {
+  if (!selectedSpaceId) {
     return (
       <p className="text-sm font-medium leading-normal">
         No space selected. Add or select a space to get started ☝️

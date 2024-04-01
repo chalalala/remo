@@ -1,39 +1,36 @@
-import { cookieKey } from '@/constants/cookies';
 import { localStorageKey } from '@/constants/local-storage';
+import { sqlQuery } from '@/constants/queries';
 import { useRemoteData } from '@/hooks/useRemoteData';
-import { Section, Space } from '@/types/Resource';
-import { getCookie } from '@/utils/cookies';
-import { isExtension } from '@/utils/env';
+import { getAccessToken } from '@/lib/googleDrive';
 import {
   Dispatch,
   FC,
   PropsWithChildren,
   SetStateAction,
   createContext,
-  useCallback,
   useContext,
   useEffect,
-  useMemo,
   useState,
 } from 'react';
+import initSqlJs, { Database } from 'sql.js';
 
 type GoogleAuth = ReturnType<typeof window.google.accounts.oauth2.initTokenClient>;
 
 interface AppContextValue {
   // States
-  spaces: Space[];
-  selectedSpace: Space | undefined;
-  sections: Section[];
+  db: Database | undefined;
+  selectedSpaceId: string;
   googleAuth: GoogleAuth | undefined;
   accessToken: string;
-  error: unknown;
+  localStorageData: ArrayBufferLike | undefined;
   isLoading: boolean;
+  error: unknown;
 
   // Actions
-  setSections: (sections: Section[]) => void;
   setGoogleAuth: Dispatch<SetStateAction<GoogleAuth | undefined>>;
   setAccessToken: Dispatch<SetStateAction<string>>;
   setSelectedSpaceId: Dispatch<SetStateAction<string>>;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 const AppContext = createContext<AppContextValue>({} as never);
@@ -41,92 +38,82 @@ const AppContext = createContext<AppContextValue>({} as never);
 export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const [googleAuth, setGoogleAuth] = useState<GoogleAuth>();
   const [accessToken, setAccessToken] = useState('');
-  const { spaces, error, isLoading, mutate } = useRemoteData(accessToken);
   const [selectedSpaceId, setSelectedSpaceId] = useState<string>('');
-  const [localStorageData, setLocalStorageData] = useState<Space[]>([]);
+  const [localStorageData, setLocalStorageData] = useState<Uint8Array | undefined>();
+  const [db, setDb] = useState<Database | undefined>();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const selectedSpace = useMemo(() => {
-    if (isLoading) {
-      return localStorageData.find((space) => space.id === selectedSpaceId);
-    }
-
-    return spaces.find((space) => space.id === selectedSpaceId);
-  }, [isLoading, localStorageData, spaces, selectedSpaceId]);
-
-  const sections = useMemo(() => selectedSpace?.sections || [], [selectedSpace]);
-
-  const setSections = useCallback(
-    async (data: Section[]) => {
-      if (isLoading || !selectedSpace) {
-        return;
-      }
-
-      const newSpaces = spaces.map((space) => {
-        if (space.id === selectedSpace.id) {
-          return {
-            ...space,
-            sections: data,
-          };
-        }
-
-        return space;
-      });
-
-      mutate(newSpaces);
-    },
-    [spaces, selectedSpace, isLoading, mutate],
-  );
+  const { data, error, isLoading: isLoadingDB } = useRemoteData(accessToken);
 
   useEffect(() => {
-    const localData = localStorage.getItem(localStorageKey.LOCAL_DATA);
+    const getToken = async () => {
+      const token = await getAccessToken();
 
-    try {
-      setLocalStorageData(localData ? JSON.parse(localData) : []);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
-
-    if (isExtension()) {
-      chrome.identity.getAuthToken({ interactive: false }, (token) => {
-        if (token) {
-          setAccessToken(token);
-        }
-      });
-
-      return;
-    }
-
-    const token = getCookie(cookieKey.GAPI_TOKEN);
-
-    if (token) {
       setAccessToken(token);
-    }
+    };
+
+    const getLocalData = () => {
+      const localData = localStorage.getItem(localStorageKey.LOCAL_DATA);
+
+      try {
+        setLocalStorageData(localData ? JSON.parse(localData) : []);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error);
+      }
+    };
+
+    const lastUsedSpaceId = localStorage.getItem(localStorageKey.LAST_SPACE_ID);
+
+    setSelectedSpaceId(lastUsedSpaceId || '');
+    getLocalData();
+    getToken();
   }, []);
 
   useEffect(() => {
-    const lastUsedSpaceId = localStorage.getItem(localStorageKey.LAST_SPACE_ID);
+    let db: Database | undefined;
 
-    localStorage.setItem(localStorageKey.LOCAL_DATA, JSON.stringify(spaces));
+    const initDatabase = async () => {
+      try {
+        const SQL = await initSqlJs({
+          locateFile: (file) => `https://sql.js.org/dist/${file}`,
+        });
 
-    setSelectedSpaceId(lastUsedSpaceId || spaces[0]?.id);
-  }, [spaces]);
+        db = new SQL.Database(data ? new Uint8Array(data) : localStorageData);
+
+        db.exec(sqlQuery.CREATE_TABLES);
+
+        localStorage.setItem(localStorageKey.LOCAL_DATA, JSON.stringify(db.export()));
+
+        setDb(db);
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(err);
+      }
+    };
+
+    initDatabase();
+
+    return () => {
+      db?.close();
+    };
+  }, [data, localStorageData]);
 
   const contextValue: AppContextValue = {
     // States
-    spaces,
-    selectedSpace,
-    sections: sections || [],
+    db,
+    selectedSpaceId,
     googleAuth,
     accessToken,
     error,
-    isLoading,
+    localStorageData,
+    isLoading: isLoading || isLoadingDB,
 
     // Actions
-    setSections,
     setGoogleAuth,
     setAccessToken,
     setSelectedSpaceId,
+    setIsLoading,
   };
 
   return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;

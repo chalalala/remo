@@ -1,24 +1,34 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '../ui/command';
 import { ChevronDownIcon, PlusIcon } from '@heroicons/react/solid';
 import { CommandInput } from 'cmdk';
 import { useAppContext } from '@/context/AppContext';
-import { useRemoteData } from '@/hooks/useRemoteData';
 import { createNewSpace } from '@/utils/sections/space';
 import { localStorageKey } from '@/constants/local-storage';
 import clsx from 'clsx';
+import { useDatabaseQuery } from '@/hooks/useDatabaseQuery';
+import { sqlQuery } from '@/constants/queries';
+import { Space } from '@/types/Resource';
 
 interface Props {
   className?: string;
 }
 
 export const SpaceSelector: FC<Props> = ({ className }) => {
-  const { accessToken, selectedSpace, setSelectedSpaceId } = useAppContext();
-  const { spaces, isLoading, mutate } = useRemoteData(accessToken);
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState('');
+  const { isLoading, selectedSpaceId, setSelectedSpaceId } = useAppContext();
+  const { getQueryResultAsJson } = useDatabaseQuery();
+  const [spaces, selectedSpace] = useMemo(() => {
+    const allSpaces = getQueryResultAsJson<Space>(sqlQuery.SELECT_SPACES);
+    const selectedSpace = allSpaces.find((space) => space.id === selectedSpaceId);
+
+    return [allSpaces, selectedSpace];
+  }, [selectedSpaceId, getQueryResultAsJson]);
+
+  // const { spaces, isLoading, mutate } = useRemoteData(accessToken);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const [isInputFocus, setIsInputFocus] = useState(false);
 
@@ -51,7 +61,7 @@ export const SpaceSelector: FC<Props> = ({ className }) => {
 
     const newSpace = createNewSpace(spaces, value);
 
-    mutate([...spaces, newSpace]);
+    // mutate([...spaces, newSpace]);
     selectSpace(newSpace.id);
   };
 

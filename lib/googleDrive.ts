@@ -114,18 +114,16 @@ export const getFileContent = async (fileId: string) => {
     },
   });
 
-  const json = await res.json();
-
   if (!res.ok) {
-    throw json.error;
+    throw new Error('Failed to get file content!');
   }
 
-  return json;
+  return res;
 };
 
 export const writeFile = async (
   fileName: string,
-  content: unknown,
+  content: BlobPart,
   options?: {
     contentType?: string;
     parents?: string[];
@@ -135,7 +133,7 @@ export const writeFile = async (
   const accessToken = await getAccessToken();
   const fileType = options?.contentType || 'application/json';
 
-  const file = new Blob([JSON.stringify(content)], {
+  const file = new Blob([content], {
     type: fileType,
   });
 
@@ -182,7 +180,7 @@ export const writeFile = async (
 
 export const updateFile = async (
   fileId: string,
-  content: unknown,
+  content: BlobPart,
   options?: {
     contentType?: string;
     signal?: AbortSignal;
@@ -195,7 +193,7 @@ export const updateFile = async (
     mimeType: fileType,
   };
 
-  const file = new Blob([JSON.stringify(content)], {
+  const file = new Blob([content], {
     type: fileType,
   });
 

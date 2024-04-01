@@ -1,8 +1,9 @@
-import { Section, SectionItem } from '@/types/Resource';
+import { Section } from '@/types/Resource';
 import { generateId } from '../string';
 import { DropResult } from 'react-beautiful-dnd';
 import { isExtension } from '../env';
 import { getSelfHostedFavicon } from '../apis/getSelfHostedFavicon';
+import { getDataFromActiveTab } from '../chrome-api';
 
 /**
  * Reorders the items in the sections array based on the provided drop result.
@@ -53,7 +54,7 @@ export const addItem = async (sections: Section[], sectionId: string, name: stri
     id = generateId();
   }
 
-  const newItem: SectionItem = {
+  const newItem = {
     id: `item_${id}`,
     name,
     icon: '',
@@ -61,14 +62,10 @@ export const addItem = async (sections: Section[], sectionId: string, name: stri
   };
 
   if (isExtension()) {
-    const queryOptions = { active: true, currentWindow: true };
-
-    const [tab] = await chrome.tabs.query(queryOptions);
-
-    const url = tab?.url || '';
+    const { url, icon } = await getDataFromActiveTab();
 
     newItem.url = url;
-    newItem.icon = await getFaviconFromURL(url);
+    newItem.icon = icon;
   }
 
   const newSections = JSON.parse(JSON.stringify(sections));
