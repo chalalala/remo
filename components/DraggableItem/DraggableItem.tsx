@@ -44,7 +44,7 @@ export const DraggableItem: FC<Props> = ({
 
       <div className="flex w-full min-w-0 flex-1 items-center justify-between gap-1">
         <div
-          className={clsx('flex min-w-0 shrink-0 items-center gap-1', {
+          className={clsx('flex min-w-0 items-center gap-1', {
             'flex-1': isEditing,
           })}
         >
