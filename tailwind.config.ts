@@ -68,6 +68,7 @@ const config = {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+        1.5: '6px',
       },
       maxHeight: {
         unset: 'unset',
