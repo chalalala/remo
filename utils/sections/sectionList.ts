@@ -1,5 +1,6 @@
 import { Section } from '@/types/Resource';
 import { generateId } from '../string';
+import { DropResult } from 'react-beautiful-dnd';
 
 /**
  * Renames a section in the given array of sections.
@@ -54,4 +55,24 @@ export const addSection = (sections: Section[], name: string) => {
  */
 export const removeSection = (sections: Section[], sectionId: string) => {
   return sections.filter((section) => section.id !== sectionId);
+};
+
+/**
+ * Reorders the sections in the space based on the provided drop result.
+ * @param sections - The array of sections to reorder.
+ * @param dropResult - The result of the drag and drop operation.
+ * @returns A new array of sections with the items reordered based on the drop result.
+ */
+export const reorderSections = (sections: Section[], dropResult: DropResult) => {
+  if (!dropResult.destination) {
+    return sections;
+  }
+
+  const modifiedSections: Section[] = JSON.parse(JSON.stringify(sections));
+
+  const draggedItem = modifiedSections.splice(dropResult.source.index, 1)?.[0];
+
+  modifiedSections.splice(dropResult.destination.index, 0, draggedItem);
+
+  return modifiedSections;
 };

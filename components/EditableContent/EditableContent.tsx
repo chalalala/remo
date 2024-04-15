@@ -1,5 +1,5 @@
-import clsx from 'clsx';
-import { ChangeEvent, ElementType, FC, HTMLAttributes, useState } from 'react';
+import { ChangeEvent, ElementType, FC, HTMLAttributes, useEffect, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 interface Props extends Omit<HTMLAttributes<HTMLElement>, 'onSubmit'> {
   title: string;
@@ -7,6 +7,10 @@ interface Props extends Omit<HTMLAttributes<HTMLElement>, 'onSubmit'> {
   setIsEditing: (isEditing: boolean) => void;
   onSubmit?: (newTitle: string) => void;
   TitleWrapper?: ElementType;
+  classNames?: {
+    wrapper?: string;
+    input?: string;
+  };
 }
 
 export const EditableContent: FC<Props> = ({
@@ -14,6 +18,7 @@ export const EditableContent: FC<Props> = ({
   className,
   isEditing,
   TitleWrapper = 'span',
+  classNames = {},
   setIsEditing,
   onSubmit,
   ...props
@@ -27,19 +32,31 @@ export const EditableContent: FC<Props> = ({
   const onSubmitChanges = () => {
     setIsEditing(false);
 
+    if (editingTitle === title) {
+      return;
+    }
+
     if (typeof onSubmit === 'function') {
       onSubmit(editingTitle);
     }
   };
 
+  // Update editing title when title changes
+  useEffect(() => {
+    setEditingTitle(title);
+  }, [title]);
+
   if (isEditing) {
     return (
       <form
         onSubmit={onSubmitChanges}
-        className={clsx('h-full w-full', className)}
+        className={twMerge('flex h-full w-full items-center', className, classNames.wrapper)}
       >
         <input
-          className="h-full w-full border-b border-b-gray-700 outline-none"
+          className={twMerge(
+            'h-full w-full border-b border-b-gray-700 outline-none',
+            classNames.input,
+          )}
           value={editingTitle}
           onChange={onChangeInput}
           onBlur={onSubmitChanges}
@@ -51,7 +68,7 @@ export const EditableContent: FC<Props> = ({
 
   return (
     <TitleWrapper
-      className={clsx('mb-px h-full w-full truncate', className)}
+      className={twMerge('flex h-full w-full items-center truncate', className, classNames.wrapper)}
       {...props}
     >
       {editingTitle}

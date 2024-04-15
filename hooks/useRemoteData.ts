@@ -1,3 +1,4 @@
+import { localStorageKey } from '@/constants/local-storage';
 import { Space } from '@/types/Resource';
 import { backupData, readBackupData } from '@/utils/apis/remoteData';
 import { useCallback, useMemo, useRef } from 'react';
@@ -11,9 +12,7 @@ export const useRemoteData = (accessToken: string) => {
     error,
     isLoading,
     isValidating,
-  } = useSWRImmutable(accessToken ? ['backupData', accessToken] : undefined, readBackupData, {
-    keepPreviousData: true,
-  });
+  } = useSWRImmutable(accessToken ? ['backupData', accessToken] : undefined, readBackupData);
 
   const mutate = useCallback(
     (data: Space[]) => {
@@ -26,6 +25,8 @@ export const useRemoteData = (accessToken: string) => {
           abortController.current = new AbortController();
 
           const res = await backupData(data, abortController.current.signal);
+
+          localStorage.setItem(localStorageKey.LOCAL_DATA, JSON.stringify(res));
 
           abortController.current = undefined;
 

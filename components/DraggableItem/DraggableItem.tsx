@@ -84,10 +84,18 @@ export const DraggableItem: FC<Props> = ({
         />
 
         <div className="shrink-0 items-center leading-none child">
-          <IconButton onClick={() => setIsEditing(true)}>
+          <IconButton
+            onClick={() => setIsEditing(true)}
+            title="Rename"
+            aria-label="Rename"
+          >
             <PencilIcon className="h-4 w-4" />
           </IconButton>
-          <IconButton onClick={onRemove}>
+          <IconButton
+            onClick={onRemove}
+            title="Remove"
+            aria-label="Remove"
+          >
             <TrashIcon className="h-4 w-4" />
           </IconButton>
         </div>
