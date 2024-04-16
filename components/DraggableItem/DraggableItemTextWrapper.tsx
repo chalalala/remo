@@ -1,13 +1,12 @@
 import React, { FC, HTMLAttributes } from 'react';
 
 interface Props extends HTMLAttributes<HTMLElement> {
-  title: string;
   url?: string;
 }
 
-export const DraggableItemTextWrapper: FC<Props> = ({ url, title, ...props }) => {
+export const DraggableItemTextWrapper: FC<Props> = ({ url, children, ...props }) => {
   if (!url) {
-    return <span {...props}>{title}</span>;
+    return <span {...props}>{children}</span>;
   }
 
   return (
@@ -17,7 +16,7 @@ export const DraggableItemTextWrapper: FC<Props> = ({ url, title, ...props }) =>
       rel="noreferrer"
       {...props}
     >
-      {title}
+      {children}
     </a>
   );
 };
