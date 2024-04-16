@@ -93,7 +93,7 @@ export const EditSpaceModal: FC<Props> = ({ isEditingSpace, setIsEditingSpace })
             </span>
           )}
         </DialogHeader>
-        <div>
+        <div className="flex-1 overflow-y-auto">
           <DragDropContext onDragEnd={onReorderSections}>
             <Droppable droppableId={selectedSpace?.id || ''}>
               {(provided) => (

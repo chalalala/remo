@@ -1,9 +1,11 @@
 import clsx from 'clsx';
-import React, { ButtonHTMLAttributes, FC, PropsWithChildren } from 'react';
+import { ButtonHTMLAttributes, FC, PropsWithChildren } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 export const enum ButtonVariant {
-  SOLID = 'solid',
-  DASHED = 'dashed',
+  PRIMARY,
+  SECONDARY,
+  DASHED,
 }
 
 interface Props extends PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>> {
@@ -13,23 +15,27 @@ interface Props extends PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement
 
 export const Button: FC<Props> = ({
   children,
-  variant = ButtonVariant.SOLID,
+  variant = ButtonVariant.PRIMARY,
   className,
   ...props
 }) => {
-  const isDashedBtn = variant === ButtonVariant.DASHED;
-
   return (
     <button
-      className={clsx(
-        'rounded font-medium',
-        {
-          [clsx(
-            'border border-dashed border-gray-500 px-2 py-1',
-            'text-sm leading-normal text-gray-500',
-          )]: isDashedBtn,
-        },
-        className,
+      className={twMerge(
+        clsx(
+          'rounded font-medium',
+          {
+            [clsx(
+              'border border-dashed border-gray-500 px-2 py-1',
+              'text-sm leading-normal text-gray-500',
+            )]: variant === ButtonVariant.DASHED,
+            [clsx('bg-primary px-4 py-1.5 font-medium uppercase text-white disabled:opacity-50')]:
+              variant === ButtonVariant.PRIMARY,
+            [clsx('bg-secondary px-4 py-1.5 font-medium uppercase')]:
+              variant === ButtonVariant.SECONDARY,
+          },
+          className,
+        ),
       )}
       {...props}
     >

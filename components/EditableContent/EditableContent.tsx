@@ -68,10 +68,10 @@ export const EditableContent: FC<Props> = ({
 
   return (
     <TitleWrapper
-      className={twMerge('flex h-full w-full items-center truncate', className, classNames.wrapper)}
+      className={twMerge('flex h-full w-full items-center', className, classNames.wrapper)}
       {...props}
     >
-      {editingTitle}
+      <span className="block truncate">{editingTitle}</span>
     </TitleWrapper>
   );
 };

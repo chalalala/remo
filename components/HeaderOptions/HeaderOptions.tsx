@@ -13,12 +13,19 @@ import {
 import { WEB_URL } from '@/constants/config';
 import { isExtension } from '@/utils/env';
 import { EditSpaceModal } from '../EditSpaceModal';
+import { writeFile } from '@/utils/file';
+import { ImportSpaceModal } from '../ImportSpaceModal';
+
+const enum headerAction {
+  EDIT_SPACE,
+  IMPORT_SPACE,
+}
 
 export const HeaderOptions: FC = () => {
   const [open, setOpen] = useState(false);
   const { selectedSpace, setAccessToken } = useAppContext();
-
-  const [isEditingSpace, setIsEditingSpace] = useState(false);
+  const [activeAction, setActiveAction] = useState<headerAction | undefined>();
+  const isUsingExtension = isExtension();
 
   const onLogout = () => {
     signOut(() => setAccessToken(''));
@@ -40,7 +47,7 @@ export const HeaderOptions: FC = () => {
           align="end"
           className="p-0"
         >
-          {isExtension() ? (
+          {isUsingExtension ? (
             <>
               <DropdownMenuItem className="cursor-pointer">
                 <a
@@ -58,9 +65,27 @@ export const HeaderOptions: FC = () => {
           {selectedSpace ? (
             <DropdownMenuItem
               className="cursor-pointer"
-              onClick={() => setIsEditingSpace(true)}
+              onClick={() => setActiveAction(headerAction.EDIT_SPACE)}
             >
               Edit space
+            </DropdownMenuItem>
+          ) : null}
+
+          {!isUsingExtension ? (
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => setActiveAction(headerAction.IMPORT_SPACE)}
+            >
+              Import space
+            </DropdownMenuItem>
+          ) : null}
+
+          {selectedSpace && !isUsingExtension ? (
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => writeFile(JSON.stringify(selectedSpace), `${selectedSpace.name}.json`)}
+            >
+              Export space
             </DropdownMenuItem>
           ) : null}
 
@@ -76,8 +101,15 @@ export const HeaderOptions: FC = () => {
       </DropdownMenu>
 
       <EditSpaceModal
-        isEditingSpace={isEditingSpace}
-        setIsEditingSpace={setIsEditingSpace}
+        isEditingSpace={activeAction === headerAction.EDIT_SPACE}
+        setIsEditingSpace={(value) => setActiveAction(value ? headerAction.EDIT_SPACE : undefined)}
+      />
+
+      <ImportSpaceModal
+        isEditingSpace={activeAction === headerAction.IMPORT_SPACE}
+        setIsImportingSpace={(value) =>
+          setActiveAction(value ? headerAction.IMPORT_SPACE : undefined)
+        }
       />
     </>
   );
