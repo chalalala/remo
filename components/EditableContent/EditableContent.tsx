@@ -32,10 +32,6 @@ export const EditableContent: FC<Props> = ({
   const onSubmitChanges = () => {
     setIsEditing(false);
 
-    if (editingTitle === title) {
-      return;
-    }
-
     if (typeof onSubmit === 'function') {
       onSubmit(editingTitle);
     }

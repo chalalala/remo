@@ -48,7 +48,11 @@ export const EditSpaceModal: FC<Props> = ({ isEditingSpace, setIsEditingSpace })
     setSections(newSections);
   };
 
-  const onRenameSection = (sectionId: string, value: string) => {
+  const onRenameSection = (sectionId: string, sectionName: string, value: string) => {
+    if (sectionName === value) {
+      return;
+    }
+
     const newSections = renameSection(sections, sectionId, value);
 
     setSections(newSections);
@@ -127,7 +131,9 @@ export const EditSpaceModal: FC<Props> = ({ isEditingSpace, setIsEditingSpace })
                                 title={item.name}
                                 url=""
                                 onRemove={() => onRemoveSection(item.id)}
-                                onChangeTitle={(value) => onRenameSection(item.id, value)}
+                                onChangeTitle={(value) =>
+                                  onRenameSection(item.id, item.name, value)
+                                }
                                 shouldShowUrl={false}
                               />
                             </div>
