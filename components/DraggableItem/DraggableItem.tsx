@@ -15,6 +15,7 @@ interface Props {
   icon?: string;
   url?: string;
   defaultEditing?: boolean;
+  shouldShowUrl?: boolean;
   onChangeTitle?: (newTitle: string) => void;
   onRemove?: () => void;
 }
@@ -25,6 +26,7 @@ export const DraggableItem: FC<Props> = ({
   title,
   icon,
   url,
+  shouldShowUrl = true,
   defaultEditing = false,
   onChangeTitle,
   onRemove,
@@ -48,15 +50,17 @@ export const DraggableItem: FC<Props> = ({
             'flex-1': isEditing,
           })}
         >
-          <DraggableItemPopover
-            sections={sections}
-            setSections={setSections}
-            sectionId={sectionId}
-            itemId={itemId}
-            url={url}
-            title={title}
-            icon={icon}
-          />
+          {shouldShowUrl ? (
+            <DraggableItemPopover
+              sections={sections}
+              setSections={setSections}
+              sectionId={sectionId}
+              itemId={itemId}
+              url={url}
+              title={title}
+              icon={icon}
+            />
+          ) : null}
 
           <EditableContent
             isEditing={isEditing}

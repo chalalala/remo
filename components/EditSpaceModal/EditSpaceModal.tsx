@@ -128,6 +128,7 @@ export const EditSpaceModal: FC<Props> = ({ isEditingSpace, setIsEditingSpace })
                                 url=""
                                 onRemove={() => onRemoveSection(item.id)}
                                 onChangeTitle={(value) => onRenameSection(item.id, value)}
+                                shouldShowUrl={false}
                               />
                             </div>
                           )}
