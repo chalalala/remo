@@ -61,6 +61,8 @@ export const ImportSpaceModal: FC<Props> = ({ isEditingSpace, setIsImportingSpac
     mutate([...filteredDuplicatedSpaces, importingSpace]);
     setSelectedSpaceId(importingSpace.id);
     setIsImportingSpace(false);
+    setImportingSpace(undefined);
+    setError('');
   };
 
   const onOpenChange = (open: boolean) => {
