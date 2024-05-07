@@ -71,16 +71,14 @@ export const HeaderOptions: FC = () => {
             </DropdownMenuItem>
           ) : null}
 
-          {!isUsingExtension ? (
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() => setActiveAction(headerAction.IMPORT_SPACE)}
-            >
-              Import space
-            </DropdownMenuItem>
-          ) : null}
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => setActiveAction(headerAction.IMPORT_SPACE)}
+          >
+            Import space
+          </DropdownMenuItem>
 
-          {selectedSpace && !isUsingExtension ? (
+          {selectedSpace ? (
             <DropdownMenuItem
               className="cursor-pointer"
               onClick={() => writeFile(JSON.stringify(selectedSpace), `${selectedSpace.name}.json`)}
