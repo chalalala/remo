@@ -15,6 +15,7 @@ import { isExtension } from '@/utils/env';
 import { EditSpaceModal } from '../EditSpaceModal';
 import { writeFile } from '@/utils/file';
 import { ImportSpaceModal } from '../ImportSpaceModal';
+import { useEditSpace } from '@/hooks/useEditSpace';
 
 const enum headerAction {
   EDIT_SPACE,
@@ -26,10 +27,16 @@ export const HeaderOptions: FC = () => {
   const { selectedSpace, setAccessToken } = useAppContext();
   const [activeAction, setActiveAction] = useState<headerAction | undefined>();
   const isUsingExtension = isExtension();
+  const { onRemoveSpace } = useEditSpace();
 
   const onLogout = () => {
     signOut(() => setAccessToken(''));
     setOpen(false);
+  };
+
+  const handleRemoveSpace = () => {
+    onRemoveSpace();
+    setActiveAction(undefined);
   };
 
   return (
@@ -63,12 +70,21 @@ export const HeaderOptions: FC = () => {
           ) : null}
 
           {selectedSpace ? (
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() => setActiveAction(headerAction.EDIT_SPACE)}
-            >
-              Edit space
-            </DropdownMenuItem>
+            <>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => setActiveAction(headerAction.EDIT_SPACE)}
+              >
+                Edit space
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={handleRemoveSpace}
+              >
+                Remove space
+              </DropdownMenuItem>
+            </>
           ) : null}
 
           <DropdownMenuItem

@@ -1,15 +1,13 @@
 import { Dialog, DialogContent, DialogHeader } from '../ui/dialog';
-import { DragDropContext, Draggable, DropResult, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { DraggableItem } from '../DraggableItem';
 import { IconButton } from '../IconButton';
 import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
 import { FC, useState } from 'react';
 import { useAppContext } from '@/context/AppContext';
-import { removeSpace, renameSpace } from '@/utils/sections/space';
-import { useRemoteData } from '@/hooks/useRemoteData';
-import { removeSection, renameSection, reorderSections } from '@/utils/sections/sectionList';
 import { EditableContent } from '../EditableContent';
 import clsx from 'clsx';
+import { useEditSpace } from '@/hooks/useEditSpace';
 
 interface Props {
   isEditingSpace: boolean;
@@ -17,51 +15,15 @@ interface Props {
 }
 
 export const EditSpaceModal: FC<Props> = ({ isEditingSpace, setIsEditingSpace }) => {
-  const { spaces, sections, selectedSpace, accessToken, setSections } = useAppContext();
-  const { isLoading, mutate } = useRemoteData(accessToken);
+  const { selectedSpace } = useAppContext();
+  const { onRemoveSection, onRenameSection, onRemoveSpace, onReorderSections, onRenameSpace } =
+    useEditSpace();
+
   const [isEditing, setIsEditing] = useState(false);
 
-  const onRemoveSpace = () => {
-    if (isLoading) {
-      return;
-    }
-
-    const newSpaces = removeSpace(spaces, selectedSpace?.id || '');
-
-    mutate(newSpaces);
+  const handleRemoveSpace = () => {
+    onRemoveSpace();
     setIsEditingSpace(false);
-  };
-
-  const onRenameSpace = (name: string) => {
-    if (isLoading) {
-      return;
-    }
-
-    const newSpaces = renameSpace(spaces, selectedSpace?.id || '', name);
-
-    mutate(newSpaces);
-  };
-
-  const onRemoveSection = (sectionId: string) => {
-    const newSections = removeSection(sections, sectionId);
-
-    setSections(newSections);
-  };
-
-  const onRenameSection = (sectionId: string, sectionName: string, value: string) => {
-    if (sectionName === value) {
-      return;
-    }
-
-    const newSections = renameSection(sections, sectionId, value);
-
-    setSections(newSections);
-  };
-
-  const onReorderSections = (result: DropResult) => {
-    const newSections = reorderSections(sections, result);
-
-    setSections(newSections);
   };
 
   return (
@@ -90,7 +52,7 @@ export const EditSpaceModal: FC<Props> = ({ isEditingSpace, setIsEditingSpace })
               <IconButton
                 title="Remove space"
                 aria-label="Remove space"
-                onClick={onRemoveSpace}
+                onClick={handleRemoveSpace}
               >
                 <TrashIcon className="h-3.5 w-3.5" />
               </IconButton>
