@@ -10,7 +10,7 @@ export const Layout: FC<Props> = ({ children, type = 'main' }) => {
   return (
     <div
       className={clsx(
-        'mx-auto h-[max(384px,100vh)] w-[480px] max-w-full overflow-hidden overflow-y-auto rounded shadow-md',
+        'mx-auto max-h-96 min-h-[200px] w-[480px] max-w-full overflow-hidden overflow-y-auto rounded shadow-md',
         'desktop:flex desktop:h-screen desktop:max-h-unset desktop:w-full desktop:flex-col',
       )}
     >
