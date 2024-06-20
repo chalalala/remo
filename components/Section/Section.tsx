@@ -1,11 +1,13 @@
 import { Section as SectionType } from '@/types/Resource';
-import React, { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { EditableAccordion } from '../EditableAccordion';
 import { DraggableItem } from '../DraggableItem';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { useEditableContent } from '@/hooks/useEditableContent';
 import { useAppContext } from '@/context/AppContext';
 import { addItem, removeItem, updateItem } from '@/utils/sections/sectionItem';
+import { getDataFromActiveTab } from '@/lib/chromeApi';
+import { isExtension } from '@/utils/env';
 
 interface Props {
   section: SectionType;
@@ -18,6 +20,7 @@ export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection }) 
   const {
     name: newItemName,
     setName: setNewItemName,
+    setDefaultName: setItemDefaultName,
     openAdd: openAddNewItem,
   } = useEditableContent();
 
@@ -45,6 +48,18 @@ export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection }) 
 
     setSections(newSections);
   };
+
+  useEffect(() => {
+    (async () => {
+      if (!isExtension()) {
+        return;
+      }
+
+      const activeTabData = await getDataFromActiveTab();
+
+      setItemDefaultName(activeTabData.title || '');
+    })();
+  });
 
   return (
     <EditableAccordion
