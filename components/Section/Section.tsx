@@ -6,8 +6,7 @@ import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { useEditableContent } from '@/hooks/useEditableContent';
 import { useAppContext } from '@/context/AppContext';
 import { addItem, removeItem, updateItem } from '@/utils/sections/sectionItem';
-import { getDataFromActiveTab } from '@/lib/chromeApi';
-import { isExtension } from '@/utils/env';
+import { getDataFromActiveTab, isExtension } from '@/lib/chromeApi';
 
 interface Props {
   section: SectionType;

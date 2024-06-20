@@ -1,10 +1,12 @@
-import { isExtension } from '../utils/env';
-
 export interface ActiveTabData {
   url: string;
   icon: string;
   title: string;
 }
+
+export const isExtension = () => {
+  return typeof chrome !== 'undefined' && !!chrome.runtime && !!chrome.runtime.id;
+};
 
 export const getDataFromActiveTab = async (): Promise<ActiveTabData> => {
   if (!isExtension()) {

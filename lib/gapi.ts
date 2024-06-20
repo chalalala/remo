@@ -1,6 +1,6 @@
 import { cookieKey } from '@/constants/cookies';
 import { removeCookie } from '../utils/cookies';
-import { isExtension } from '@/utils/env';
+import { isExtension } from '@/lib/chromeApi';
 import { getAccessToken } from './googleDrive';
 import { localStorageKey } from '@/constants/local-storage';
 

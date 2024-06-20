@@ -3,7 +3,7 @@ import { NextPageWithLayout } from './_app';
 import { SectionList } from '@/components/SectionList';
 import { GoogleSignIn } from '@/components/GoogleSignIn';
 import { useAppContext } from '@/context/AppContext';
-import { isExtension } from '@/utils/env';
+import { isExtension } from '@/lib/chromeApi';
 import { GoogleApiScript } from '@/components/GoogleApiScript';
 
 const Home: NextPageWithLayout = () => {

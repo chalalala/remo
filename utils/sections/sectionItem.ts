@@ -1,9 +1,8 @@
 import { Section, SectionItem } from '@/types/Resource';
 import { generateId } from '../string';
 import { DropResult } from 'react-beautiful-dnd';
-import { isExtension } from '../env';
+import { isExtension, getDataFromActiveTab } from '@/lib/chromeApi';
 import { getSelfHostedFavicon } from '../apis/getSelfHostedFavicon';
-import { getDataFromActiveTab } from '@/lib/chromeApi';
 
 /**
  * Reorders the items in the sections array based on the provided drop result.

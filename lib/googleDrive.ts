@@ -1,6 +1,6 @@
 import { cookieKey } from '@/constants/cookies';
 import { getCookie } from '@/utils/cookies';
-import { isExtension } from '@/utils/env';
+import { isExtension } from '@/lib/chromeApi';
 
 export const getAccessToken = () => {
   return new Promise<string>((resolve, reject) => {

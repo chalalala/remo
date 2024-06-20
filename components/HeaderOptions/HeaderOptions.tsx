@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { WEB_URL } from '@/constants/config';
-import { isExtension } from '@/utils/env';
+import { isExtension } from '@/lib/chromeApi';
 import { EditSpaceModal } from '../EditSpaceModal';
 import { writeFile } from '@/utils/file';
 import { ImportSpaceModal } from '../ImportSpaceModal';
