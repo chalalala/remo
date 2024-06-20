@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Image } from '../Image';
-import { isExtension } from '@/utils/env';
+import { isExtension } from '@/lib/chromeApi';
 import { useAppContext } from '@/context/AppContext';
 
 export const GoogleSignIn: FC = () => {

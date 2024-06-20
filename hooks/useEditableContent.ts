@@ -2,10 +2,11 @@ import { useState } from 'react';
 
 export const useEditableContent = () => {
   const [name, setName] = useState<string | null>(null);
+  const [defaultName, setDefaultName] = useState('');
 
   const openAdd = () => {
-    setName('');
+    setName(defaultName);
   };
 
-  return { name, setName, openAdd };
+  return { name, setName, setDefaultName, openAdd };
 };

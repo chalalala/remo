@@ -3,7 +3,7 @@ import { localStorageKey } from '@/constants/local-storage';
 import { useRemoteData } from '@/hooks/useRemoteData';
 import { Section, Space } from '@/types/Resource';
 import { getCookie } from '@/utils/cookies';
-import { isExtension } from '@/utils/env';
+import { isExtension } from '@/lib/chromeApi';
 import {
   Dispatch,
   FC,

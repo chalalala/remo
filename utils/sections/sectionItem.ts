@@ -1,7 +1,7 @@
 import { Section, SectionItem } from '@/types/Resource';
 import { generateId } from '../string';
 import { DropResult } from 'react-beautiful-dnd';
-import { isExtension } from '../env';
+import { isExtension, getDataFromActiveTab } from '@/lib/chromeApi';
 import { getSelfHostedFavicon } from '../apis/getSelfHostedFavicon';
 
 /**
@@ -61,14 +61,10 @@ export const addItem = async (sections: Section[], sectionId: string, name: stri
   };
 
   if (isExtension()) {
-    const queryOptions = { active: true, currentWindow: true };
-
-    const [tab] = await chrome.tabs.query(queryOptions);
-
-    const url = tab?.url || '';
+    const { url, icon } = await getDataFromActiveTab();
 
     newItem.url = url;
-    newItem.icon = await getFaviconFromURL(url);
+    newItem.icon = icon || (await getFaviconFromURL(url));
   }
 
   const newSections = JSON.parse(JSON.stringify(sections));
