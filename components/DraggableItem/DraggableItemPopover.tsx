@@ -4,6 +4,7 @@ import { CheckIcon, LinkIcon } from '@heroicons/react/solid';
 import { Section } from '@/types/Resource';
 import { Image } from '../Image';
 import { getFaviconFromURL, updateItem } from '@/utils/sections/sectionItem';
+import { getDataFromActiveTab } from '@/lib/chromeApi';
 
 interface Props {
   sections: Section[];
@@ -43,6 +44,12 @@ export const DraggableItemPopover: FC<Props> = ({
     setOpen(false);
   };
 
+  const updateWithCurrentLink = async () => {
+    const { url } = await getDataFromActiveTab();
+
+    setInputValue(url);
+  };
+
   return (
     <Popover
       open={open}
@@ -67,7 +74,12 @@ export const DraggableItemPopover: FC<Props> = ({
           className="flex items-center gap-1"
           onSubmit={updateUrl}
         >
-          <LinkIcon className="h-4 w-4" />
+          <button
+            type="button"
+            onClick={updateWithCurrentLink}
+          >
+            <LinkIcon className="h-4 w-4" />
+          </button>
           <input
             value={inputValue}
             onChange={(event) => setInputValue(event.target.value)}
