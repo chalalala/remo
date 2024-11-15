@@ -1,5 +1,5 @@
 import { Section as SectionType } from '@/types/Resource';
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { EditableAccordion } from '../EditableAccordion';
 import { DraggableItem } from '../DraggableItem';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
@@ -7,6 +7,7 @@ import { useEditableContent } from '@/hooks/useEditableContent';
 import { useAppContext } from '@/context/AppContext';
 import { addItem, removeItem, updateItem } from '@/utils/sections/sectionItem';
 import { getDataFromActiveTab, isExtension } from '@/lib/chromeApi';
+import { DuplicatedAlertModal } from '../DuplicatedAlertModal';
 
 interface Props {
   section: SectionType;
@@ -22,6 +23,34 @@ export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection }) 
     setDefaultName: setItemDefaultName,
     openAdd: openAddNewItem,
   } = useEditableContent();
+  const [issOpenDuplicatedAlert, setIsOpenDuplicatedAlert] = useState(false);
+
+  const checkIsDuplicatedLink = async () => {
+    if (!isExtension()) {
+      return false;
+    }
+
+    const { url } = await getDataFromActiveTab();
+
+    return sections.some((section) => section.items.some((item) => item.url === url));
+  };
+
+  const startAddNewItem = async () => {
+    const isDuplicatedLink = await checkIsDuplicatedLink();
+
+    if (isDuplicatedLink) {
+      setIsOpenDuplicatedAlert(true);
+
+      return;
+    }
+
+    openAddNewItem();
+  };
+
+  const onConfirmAddDuplicatedItem = async () => {
+    await setIsOpenDuplicatedAlert(false);
+    openAddNewItem();
+  };
 
   const onAddNewItem = async (value: string) => {
     setNewItemName(null);
@@ -68,7 +97,7 @@ export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection }) 
       removeBtnTitle="Remove section"
       onChangeTitle={(value) => onChangeTitle(section.id, value)}
       onRemove={() => onRemoveSection(section.id)}
-      onAdd={openAddNewItem}
+      onAdd={startAddNewItem}
     >
       <Droppable droppableId={section.id}>
         {(provided) => (
@@ -115,6 +144,13 @@ export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection }) 
           </div>
         )}
       </Droppable>
+
+      <DuplicatedAlertModal
+        isOpen={issOpenDuplicatedAlert}
+        setIsOpen={setIsOpenDuplicatedAlert}
+        onConfirm={onConfirmAddDuplicatedItem}
+        onCancel={() => setIsOpenDuplicatedAlert(false)}
+      />
     </EditableAccordion>
   );
 };
