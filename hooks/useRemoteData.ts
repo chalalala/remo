@@ -18,19 +18,19 @@ export const useRemoteData = (accessToken: string) => {
     (data: Space[]) => {
       swrMutate(
         async () => {
-          if (abortController.current) {
-            abortController.current.abort();
-          }
+          try {
+            if (abortController.current) {
+              abortController.current.abort();
+            }
 
-          abortController.current = new AbortController();
-
-          const res = await backupData(data, abortController.current.signal);
-
-          localStorage.setItem(localStorageKey.LOCAL_DATA, JSON.stringify(res));
+            abortController.current = new AbortController();
+            await backupData(data, abortController.current.signal);
+            localStorage.setItem(localStorageKey.LOCAL_DATA, JSON.stringify(data));
+          } catch (error) {}
 
           abortController.current = undefined;
 
-          return res;
+          return data;
         },
         {
           optimisticData: data,
