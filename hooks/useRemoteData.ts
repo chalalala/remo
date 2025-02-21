@@ -1,6 +1,8 @@
 import { localStorageKey } from '@/constants/local-storage';
+import { useResources } from '@/stores/resources';
 import { Space } from '@/types/Resource';
 import { backupData, readBackupData } from '@/utils/apis/remoteData';
+import { isObject } from '@/utils/object';
 import { useCallback, useMemo, useRef } from 'react';
 import useSWRImmutable from 'swr/immutable';
 
@@ -13,10 +15,13 @@ export const useRemoteData = (accessToken: string) => {
     isLoading,
     isValidating,
   } = useSWRImmutable(accessToken ? ['backupData', accessToken] : undefined, readBackupData);
+  const { setIsBackingUp } = useResources();
 
   const mutate = useCallback(
-    (data: Space[]) => {
-      swrMutate(
+    async (data: Space[]) => {
+      setIsBackingUp(true);
+
+      await swrMutate(
         async () => {
           try {
             if (abortController.current) {
@@ -26,11 +31,15 @@ export const useRemoteData = (accessToken: string) => {
             abortController.current = new AbortController();
             await backupData(data, abortController.current.signal);
             localStorage.setItem(localStorageKey.LOCAL_DATA, JSON.stringify(data));
-          } catch (error) {}
 
-          abortController.current = undefined;
-
-          return data;
+            return data;
+          } catch (error) {
+            if (isObject(error) && 'name' in error && error.name !== 'AbortError') {
+              throw error;
+            }
+          } finally {
+            abortController.current = undefined;
+          }
         },
         {
           optimisticData: data,
@@ -39,8 +48,10 @@ export const useRemoteData = (accessToken: string) => {
           revalidate: false,
         },
       );
+
+      setIsBackingUp(false);
     },
-    [swrMutate],
+    [setIsBackingUp, swrMutate],
   );
 
   return useMemo(
