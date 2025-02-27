@@ -6,6 +6,7 @@ import { IconButton } from '../IconButton';
 import { useRemoteData } from '@/hooks/useRemoteData';
 import { useAppContext } from '@/context/AppContext';
 import clsx from 'clsx';
+import { useResources } from '@/stores/resources';
 
 interface Props {
   variant?: 'default' | 'minimal';
@@ -13,6 +14,7 @@ interface Props {
 
 export const Header: FC<Props> = ({ variant = 'default' }) => {
   const { accessToken } = useAppContext();
+  const { isBackingUp } = useResources();
   const { refresh, isLoading } = useRemoteData(accessToken);
 
   if (variant === 'minimal') {
@@ -31,7 +33,7 @@ export const Header: FC<Props> = ({ variant = 'default' }) => {
       <div className="flex items-center gap-1">
         <IconButton
           className={clsx('h-6 w-6 shrink-0', {
-            'animate-spin': isLoading,
+            'animate-spin': isLoading || isBackingUp,
           })}
           onClick={() => refresh()}
         >
