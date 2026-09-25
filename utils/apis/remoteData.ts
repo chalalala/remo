@@ -33,7 +33,7 @@ export const readBackupData = async () => {
 };
 
 export const backupData = async (data: Space[], signal?: AbortSignal) => {
-  const fileRes = await findFiles(config.FILE_NAME, config.FILE_TYPE);
+  const fileRes = await findFiles(config.FILE_NAME, config.FILE_TYPE, { signal });
 
   // If file exists, update file content by fileId
   if (fileRes?.files?.length) {
@@ -43,12 +43,12 @@ export const backupData = async (data: Space[], signal?: AbortSignal) => {
   }
   // If no file exists, create new file
   else {
-    const folderRes = await findFolders(config.FOLDER_NAME);
+    const folderRes = await findFolders(config.FOLDER_NAME, { signal });
     let folderId;
 
     // If no parent folder exsits, create new folder
     if (!folderRes?.files?.length) {
-      const createFolderRes = await createFolder(config.FOLDER_NAME);
+      const createFolderRes = await createFolder(config.FOLDER_NAME, { signal });
 
       folderId = createFolderRes?.id;
     }
@@ -60,6 +60,7 @@ export const backupData = async (data: Space[], signal?: AbortSignal) => {
     // Add file to parent folder
     await writeFile(config.FILE_NAME, data, {
       parents: [folderId],
+      signal,
     });
   }
 
