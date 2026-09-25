@@ -17,7 +17,7 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the
+You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the
 file.
 
 ⚠️ **Note:** Some  Next.js features require a Node.js web server, so server-related features, like next/image, are unsupported by a Chrome extension. Check more details [here](https://nextjs.org/docs/pages/building-your-application/deploying/static-exports#unsupported-features).
