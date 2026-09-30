@@ -1,3 +1,4 @@
+import { showActionToast } from '@/components/ui/action-toast';
 import { toast } from '@/components/ui/use-toast';
 import { localStorageKey } from '@/constants/local-storage';
 import { useResources } from '@/stores/resources';
@@ -9,6 +10,9 @@ import useSWRImmutable from 'swr/immutable';
 
 const isAbortError = (error: unknown) =>
   isObject(error) && 'name' in error && error.name === 'AbortError';
+
+const isConflictError = (error: unknown) =>
+  isObject(error) && 'name' in error && error.name === 'RemoteConflictError';
 
 // Shared by every useRemoteData instance, so a new backup always cancels the one in flight
 let currentBackup: AbortController | undefined;
@@ -48,7 +52,16 @@ export const useRemoteData = (accessToken: string) => {
           },
         );
       } catch (error) {
-        if (!isAbortError(error)) {
+        if (isConflictError(error)) {
+          showActionToast({
+            variant: 'destructive',
+            title: 'Remo was updated on another device',
+            description:
+              'Your last change was not saved so it would not overwrite newer data. Reload and try again.',
+            actionLabel: 'Reload',
+            onAction: () => swrMutate(),
+          });
+        } else if (!isAbortError(error)) {
           toast({
             variant: 'destructive',
             title: 'Failed to save changes',

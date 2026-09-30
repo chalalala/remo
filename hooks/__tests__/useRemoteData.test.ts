@@ -85,6 +85,24 @@ describe('useRemoteData', () => {
     expect(toast).toHaveBeenCalledWith(expect.objectContaining({ variant: 'destructive' }));
   });
 
+  it('should roll back and offer a reload when another device changed the data', async () => {
+    const { result } = await renderRemoteData();
+    const conflict = Object.assign(new Error('Changed elsewhere'), { name: 'RemoteConflictError' });
+
+    (backupData as jest.Mock).mockRejectedValue(conflict);
+
+    await act(() => result.current.mutate([space('1')]));
+
+    expect(result.current.spaces).toEqual([]);
+    expect(useResources.getState().isBackingUp).toBe(false);
+    expect(toast).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Remo was updated on another device',
+        action: expect.anything(),
+      }),
+    );
+  });
+
   it('should keep backing up until the latest of overlapping backups finishes', async () => {
     const { result } = await renderRemoteData();
     const first = [space('1')];

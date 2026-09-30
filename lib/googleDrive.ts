@@ -42,14 +42,17 @@ export const createFolder = async (folderName: string, options?: { signal?: Abor
     }),
   );
 
-  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-    method: 'POST',
-    headers: {
-      Authorization: 'Bearer ' + accessToken,
+  const res = await fetch(
+    'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,modifiedTime',
+    {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + accessToken,
+      },
+      body: form,
+      signal: options?.signal,
     },
-    body: form,
-    signal: options?.signal,
-  });
+  );
 
   const json = await res.json();
 
@@ -69,6 +72,7 @@ export const findFiles = async (
   const queryParams = new URLSearchParams({
     q: `name = '${fileName}' and mimeType = '${fileType}' and trashed = false`,
     spaces: 'drive',
+    fields: 'files(id,name,modifiedTime)',
   });
 
   const res = await fetch(`https://www.googleapis.com/drive/v3/files?${queryParams.toString()}`, {
@@ -169,14 +173,17 @@ export const writeFile = async (
 
   form.append('file', file);
 
-  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-    method: 'POST',
-    headers: {
-      Authorization: 'Bearer ' + accessToken,
+  const res = await fetch(
+    'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,modifiedTime',
+    {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + accessToken,
+      },
+      body: form,
+      signal: options?.signal,
     },
-    body: form,
-    signal: options?.signal,
-  });
+  );
 
   const json = await res.json();
 
@@ -218,7 +225,7 @@ export const updateFile = async (
   form.append('file', file);
 
   const res = await fetch(
-    `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`,
+    `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart&fields=id,modifiedTime`,
     {
       method: 'PATCH',
       headers: {
