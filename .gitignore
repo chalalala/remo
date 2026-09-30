@@ -39,3 +39,7 @@ draft/
 extension/
 
 .env
+# playwright
+/test-results/
+/playwright-report/
+/blob-report/

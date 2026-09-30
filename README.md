@@ -22,6 +22,19 @@ file.
 
 ⚠️ **Note:** Some  Next.js features require a Node.js web server, so server-related features, like next/image, are unsupported by a Chrome extension. Check more details [here](https://nextjs.org/docs/pages/building-your-application/deploying/static-exports#unsupported-features).
 
+## Tests
+
+Unit tests:
+```
+pnpm test
+```
+
+End-to-end tests run the app in Chromium against a fake Google Drive, so they need no Google account:
+```
+pnpm exec playwright install chromium
+pnpm test:e2e
+```
+
 ## Build web
 To create a production build for the web:
 ```
