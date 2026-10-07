@@ -26,7 +26,7 @@ export const getAccessToken = () => {
   });
 };
 
-export const createFolder = async (folderName: string) => {
+export const createFolder = async (folderName: string, options?: { signal?: AbortSignal }) => {
   const accessToken = await getAccessToken();
   const metadata = {
     name: folderName,
@@ -48,6 +48,7 @@ export const createFolder = async (folderName: string) => {
       Authorization: 'Bearer ' + accessToken,
     },
     body: form,
+    signal: options?.signal,
   });
 
   const json = await res.json();
@@ -59,7 +60,11 @@ export const createFolder = async (folderName: string) => {
   return json;
 };
 
-export const findFiles = async (fileName: string, fileType: string) => {
+export const findFiles = async (
+  fileName: string,
+  fileType: string,
+  options?: { signal?: AbortSignal },
+) => {
   const accessToken = await getAccessToken();
   const queryParams = new URLSearchParams({
     q: `name = '${fileName}' and mimeType = '${fileType}' and trashed = false`,
@@ -71,6 +76,7 @@ export const findFiles = async (fileName: string, fileType: string) => {
     headers: {
       Authorization: 'Bearer ' + accessToken,
     },
+    signal: options?.signal,
   });
 
   const json = await res.json();
@@ -82,7 +88,7 @@ export const findFiles = async (fileName: string, fileType: string) => {
   return json;
 };
 
-export const findFolders = async (folderName: string) => {
+export const findFolders = async (folderName: string, options?: { signal?: AbortSignal }) => {
   const accessToken = await getAccessToken();
   const queryParams = new URLSearchParams({
     q: `name = '${folderName}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
@@ -93,6 +99,7 @@ export const findFolders = async (folderName: string) => {
     headers: {
       Authorization: 'Bearer ' + accessToken,
     },
+    signal: options?.signal,
   });
 
   const json = await res.json();
