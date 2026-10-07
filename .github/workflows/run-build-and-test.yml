@@ -36,7 +36,8 @@ jobs:
     permissions:
       checks: write
       pull-requests: write
-      contents: read
+      # On pushes to main the report is published as a commit comment, which needs write access
+      contents: write
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v4
