@@ -4,8 +4,9 @@ import { setCookie } from '@/utils/cookies';
 import Script from 'next/script';
 import { FC, useCallback } from 'react';
 
-// Only covers files Remo creates itself. Keep in sync with oauth2.scopes in public/manifest.json
-const SCOPE = 'https://www.googleapis.com/auth/drive.file';
+// Full Drive access is needed to read backups created by other OAuth clients (e.g. web vs extension).
+// drive.file can't see those files. Keep in sync with oauth2.scopes in public/manifest.json
+const SCOPE = 'https://www.googleapis.com/auth/drive';
 
 export const GoogleApiScript: FC = () => {
   const { setGoogleAuth, setAccessToken } = useAppContext();
