@@ -7,6 +7,7 @@ import { useRemoteData } from '@/hooks/useRemoteData';
 import { useAppContext } from '@/context/AppContext';
 import clsx from 'clsx';
 import { useResources } from '@/stores/resources';
+import { SearchDialog } from '../SearchDialog';
 
 interface Props {
   variant?: 'default' | 'minimal';
@@ -31,11 +32,14 @@ export const Header: FC<Props> = ({ variant = 'default' }) => {
       </div>
       <SpaceSelector className="flex-1" />
       <div className="flex items-center gap-1">
+        <SearchDialog />
         <IconButton
           className={clsx('h-6 w-6 shrink-0', {
             'animate-spin': isLoading || isBackingUp,
           })}
           onClick={() => refresh()}
+          title="Reload"
+          aria-label="Reload"
         >
           <RefreshIcon />
         </IconButton>

@@ -1,6 +1,6 @@
 import { ChevronDownIcon, MinusIcon, PlusIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
-import { FC, PropsWithChildren, SyntheticEvent, useState } from 'react';
+import { FC, PropsWithChildren, ReactNode, SyntheticEvent, useState } from 'react';
 import { IconButton } from '../IconButton';
 import { EditableContent } from '../EditableContent';
 
@@ -10,6 +10,8 @@ interface Props extends PropsWithChildren {
   title: string;
   addBtnTitle?: string;
   removeBtnTitle?: string;
+  // Extra buttons shown before the add and remove buttons
+  actions?: ReactNode;
   onChangeTitle?: (newTitle: string) => void;
   onRemove?: () => void;
   onAdd?: () => void;
@@ -22,6 +24,7 @@ export const EditableAccordion: FC<Props> = ({
   title,
   addBtnTitle,
   removeBtnTitle,
+  actions,
   onChangeTitle,
   onRemove,
   onAdd,
@@ -66,6 +69,8 @@ export const EditableAccordion: FC<Props> = ({
         </div>
 
         <div className="flex items-center">
+          {actions}
+
           <IconButton
             title={addBtnTitle}
             onClick={onAdd}

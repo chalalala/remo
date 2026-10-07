@@ -1,23 +1,16 @@
 import { useAppContext } from '@/context/AppContext';
 import { useRemoteData } from './useRemoteData';
 import { useCallback } from 'react';
-import { removeSpace, renameSpace } from '@/utils/sections/space';
-import { removeSection, renameSection, reorderSections } from '@/utils/sections/sectionList';
+import { renameSpace } from '@/utils/sections/space';
+import { renameSection, reorderSections } from '@/utils/sections/sectionList';
+import { useRemoveWithUndo } from './useRemoveWithUndo';
 import { DropResult } from 'react-beautiful-dnd';
 
 export const useEditSpace = () => {
   const { spaces, sections, selectedSpace, accessToken, setSections } = useAppContext();
   const { isLoading, mutate } = useRemoteData(accessToken);
 
-  const onRemoveSpace = useCallback(() => {
-    if (isLoading) {
-      return;
-    }
-
-    const newSpaces = removeSpace(spaces, selectedSpace?.id || '');
-
-    mutate(newSpaces);
-  }, [isLoading, spaces, selectedSpace, mutate]);
+  const { removeSpace: onRemoveSpace, removeSection: onRemoveSection } = useRemoveWithUndo();
 
   const onRenameSpace = useCallback(
     (name: string) => {
@@ -30,15 +23,6 @@ export const useEditSpace = () => {
       mutate(newSpaces);
     },
     [isLoading, spaces, selectedSpace, mutate],
-  );
-
-  const onRemoveSection = useCallback(
-    (sectionId: string) => {
-      const newSections = removeSection(sections, sectionId);
-
-      setSections(newSections);
-    },
-    [sections, setSections],
   );
 
   const onRenameSection = useCallback(

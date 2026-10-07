@@ -8,7 +8,8 @@ import { useAppContext } from '@/context/AppContext';
 import dynamic from 'next/dynamic';
 import { useEditableContent } from '@/hooks/useEditableContent';
 import { reorderItems } from '@/utils/sections/sectionItem';
-import { addSection, removeSection, renameSection } from '@/utils/sections/sectionList';
+import { addSection, renameSection } from '@/utils/sections/sectionList';
+import { useRemoveWithUndo } from '@/hooks/useRemoveWithUndo';
 import { Loader } from '../Loader';
 
 // Disables loading react-beautiful-dnd modules in the SSR mode
@@ -38,11 +39,7 @@ export const SectionList: FC<Props> = () => {
     setSections(newSections);
   };
 
-  const onRemoveSection = (sectionId: string) => {
-    const newSections = removeSection(sections, sectionId);
-
-    setSections(newSections);
-  };
+  const { removeSection: onRemoveSection } = useRemoveWithUndo();
 
   const onAddNewSection = (value: string) => {
     setNewSectionName(null);
