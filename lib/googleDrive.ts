@@ -73,6 +73,8 @@ export const findFiles = async (
     q: `name = '${fileName}' and mimeType = '${fileType}' and trashed = false`,
     spaces: 'drive',
     fields: 'files(id,name,modifiedTime)',
+    // The oldest file is the original backup; any later one is an accidental duplicate
+    orderBy: 'createdTime',
   });
 
   const res = await fetch(`https://www.googleapis.com/drive/v3/files?${queryParams.toString()}`, {
@@ -96,6 +98,7 @@ export const findFolders = async (folderName: string, options?: { signal?: Abort
   const accessToken = await getAccessToken();
   const queryParams = new URLSearchParams({
     q: `name = '${folderName}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+    orderBy: 'createdTime',
   });
 
   const res = await fetch(`https://www.googleapis.com/drive/v3/files?${queryParams.toString()}`, {

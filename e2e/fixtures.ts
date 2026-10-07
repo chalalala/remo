@@ -55,6 +55,17 @@ export class FakeDrive {
     });
   }
 
+  /** Adds a second backup file, like the one an app with narrower access would create. */
+  addDuplicateBackup(spaces: Space[]) {
+    this.files.push({
+      id: `file_${this.files.length + 1}`,
+      name: FILE_NAME,
+      mimeType: 'application/json',
+      modifiedTime: this.nextTime(),
+      content: spaces,
+    });
+  }
+
   private parseMultipart(route: Route) {
     const request = route.request();
     const boundary = /boundary=(.+)$/.exec(request.headers()['content-type'] || '')?.[1] || '';
@@ -82,9 +93,11 @@ export class FakeDrive {
       const q = url.searchParams.get('q') || '';
       const name = /name = '([^']+)'/.exec(q)?.[1];
       const mimeType = /mimeType = '([^']+)'/.exec(q)?.[1];
-      const files = this.files
-        .filter((file) => file.name === name && file.mimeType === mimeType)
-        .map(({ id, name, modifiedTime }) => ({ id, name, modifiedTime }));
+      const matches = this.files.filter((file) => file.name === name && file.mimeType === mimeType);
+      // Without orderBy, list the newest first so code relying on the default order is caught
+      const ordered =
+        url.searchParams.get('orderBy') === 'createdTime' ? matches : [...matches].reverse();
+      const files = ordered.map(({ id, name, modifiedTime }) => ({ id, name, modifiedTime }));
 
       return route.fulfill({ json: { files } });
     }
