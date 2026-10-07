@@ -1,13 +1,23 @@
+import { showActionToast } from '@/components/ui/action-toast';
+import { toast } from '@/components/ui/use-toast';
 import { localStorageKey } from '@/constants/local-storage';
 import { useResources } from '@/stores/resources';
 import { Space } from '@/types/Resource';
 import { backupData, readBackupData } from '@/utils/apis/remoteData';
 import { isObject } from '@/utils/object';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo } from 'react';
 import useSWRImmutable from 'swr/immutable';
 
+const isAbortError = (error: unknown) =>
+  isObject(error) && 'name' in error && error.name === 'AbortError';
+
+const isConflictError = (error: unknown) =>
+  isObject(error) && 'name' in error && error.name === 'RemoteConflictError';
+
+// Shared by every useRemoteData instance, so a new backup always cancels the one in flight
+let currentBackup: AbortController | undefined;
+
 export const useRemoteData = (accessToken: string) => {
-  const abortController = useRef<AbortController | undefined>();
   const {
     data,
     mutate: swrMutate,
@@ -19,37 +29,52 @@ export const useRemoteData = (accessToken: string) => {
 
   const mutate = useCallback(
     async (data: Space[]) => {
+      currentBackup?.abort();
+
+      const controller = new AbortController();
+
+      currentBackup = controller;
       setIsBackingUp(true);
 
-      await swrMutate(
-        async () => {
-          try {
-            if (abortController.current) {
-              abortController.current.abort();
-            }
-
-            abortController.current = new AbortController();
-            await backupData(data, abortController.current.signal);
+      try {
+        await swrMutate(
+          async () => {
+            await backupData(data, controller.signal);
             localStorage.setItem(localStorageKey.LOCAL_DATA, JSON.stringify(data));
 
             return data;
-          } catch (error) {
-            if (isObject(error) && 'name' in error && error.name !== 'AbortError') {
-              throw error;
-            }
-          } finally {
-            abortController.current = undefined;
-          }
-        },
-        {
-          optimisticData: data,
-          rollbackOnError: true,
-          populateCache: true,
-          revalidate: false,
-        },
-      );
-
-      setIsBackingUp(false);
+          },
+          {
+            optimisticData: data,
+            rollbackOnError: true,
+            populateCache: true,
+            revalidate: false,
+          },
+        );
+      } catch (error) {
+        if (isConflictError(error)) {
+          showActionToast({
+            variant: 'destructive',
+            title: 'Remo was updated on another device',
+            description:
+              'Your last change was not saved so it would not overwrite newer data. Reload and try again.',
+            actionLabel: 'Reload',
+            onAction: () => swrMutate(),
+          });
+        } else if (!isAbortError(error)) {
+          toast({
+            variant: 'destructive',
+            title: 'Failed to save changes',
+            description: 'Your latest change was not saved to Google Drive. Please try again.',
+          });
+        }
+      } finally {
+        // Only the latest backup may clear the state, an aborted one must not stop the spinner
+        if (currentBackup === controller) {
+          currentBackup = undefined;
+          setIsBackingUp(false);
+        }
+      }
     },
     [setIsBackingUp, swrMutate],
   );

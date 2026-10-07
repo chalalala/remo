@@ -5,6 +5,7 @@ import { GoogleSignIn } from '@/components/GoogleSignIn';
 import { useAppContext } from '@/context/AppContext';
 import { isExtension } from '@/lib/chromeApi';
 import { GoogleApiScript } from '@/components/GoogleApiScript';
+import { PendingItemBanner } from '@/components/PendingItemBanner';
 
 const Home: NextPageWithLayout = () => {
   const { accessToken } = useAppContext();
@@ -13,6 +14,7 @@ const Home: NextPageWithLayout = () => {
     <Layout type={accessToken ? 'main' : 'account'}>
       {accessToken ? (
         <div className="px-6 pt-4">
+          <PendingItemBanner />
           <SectionList />
         </div>
       ) : (

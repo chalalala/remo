@@ -5,7 +5,7 @@ const createJestConfig = nextJest({ dir: './' });
 
 const customJestConfig: Config = {
   preset: 'ts-jest',
-  testPathIgnorePatterns: ['<rootDir>/node_modules'],
+  testPathIgnorePatterns: ['<rootDir>/node_modules', '<rootDir>/e2e'],
   testEnvironment: 'jest-environment-jsdom',
   modulePaths: ['<rootDir>'],
   coverageThreshold: {

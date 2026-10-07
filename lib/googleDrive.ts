@@ -26,7 +26,7 @@ export const getAccessToken = () => {
   });
 };
 
-export const createFolder = async (folderName: string) => {
+export const createFolder = async (folderName: string, options?: { signal?: AbortSignal }) => {
   const accessToken = await getAccessToken();
   const metadata = {
     name: folderName,
@@ -42,13 +42,17 @@ export const createFolder = async (folderName: string) => {
     }),
   );
 
-  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-    method: 'POST',
-    headers: {
-      Authorization: 'Bearer ' + accessToken,
+  const res = await fetch(
+    'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,modifiedTime',
+    {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + accessToken,
+      },
+      body: form,
+      signal: options?.signal,
     },
-    body: form,
-  });
+  );
 
   const json = await res.json();
 
@@ -59,11 +63,16 @@ export const createFolder = async (folderName: string) => {
   return json;
 };
 
-export const findFiles = async (fileName: string, fileType: string) => {
+export const findFiles = async (
+  fileName: string,
+  fileType: string,
+  options?: { signal?: AbortSignal },
+) => {
   const accessToken = await getAccessToken();
   const queryParams = new URLSearchParams({
     q: `name = '${fileName}' and mimeType = '${fileType}' and trashed = false`,
     spaces: 'drive',
+    fields: 'files(id,name,modifiedTime)',
   });
 
   const res = await fetch(`https://www.googleapis.com/drive/v3/files?${queryParams.toString()}`, {
@@ -71,6 +80,7 @@ export const findFiles = async (fileName: string, fileType: string) => {
     headers: {
       Authorization: 'Bearer ' + accessToken,
     },
+    signal: options?.signal,
   });
 
   const json = await res.json();
@@ -82,7 +92,7 @@ export const findFiles = async (fileName: string, fileType: string) => {
   return json;
 };
 
-export const findFolders = async (folderName: string) => {
+export const findFolders = async (folderName: string, options?: { signal?: AbortSignal }) => {
   const accessToken = await getAccessToken();
   const queryParams = new URLSearchParams({
     q: `name = '${folderName}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
@@ -93,6 +103,7 @@ export const findFolders = async (folderName: string) => {
     headers: {
       Authorization: 'Bearer ' + accessToken,
     },
+    signal: options?.signal,
   });
 
   const json = await res.json();
@@ -162,14 +173,17 @@ export const writeFile = async (
 
   form.append('file', file);
 
-  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-    method: 'POST',
-    headers: {
-      Authorization: 'Bearer ' + accessToken,
+  const res = await fetch(
+    'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,modifiedTime',
+    {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + accessToken,
+      },
+      body: form,
+      signal: options?.signal,
     },
-    body: form,
-    signal: options?.signal,
-  });
+  );
 
   const json = await res.json();
 
@@ -211,7 +225,7 @@ export const updateFile = async (
   form.append('file', file);
 
   const res = await fetch(
-    `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`,
+    `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart&fields=id,modifiedTime`,
     {
       method: 'PATCH',
       headers: {

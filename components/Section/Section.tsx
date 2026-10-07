@@ -1,12 +1,16 @@
 import { Section as SectionType } from '@/types/Resource';
-import { FC, useEffect, useState } from 'react';
+import { FC, MouseEvent, useEffect, useState } from 'react';
 import { EditableAccordion } from '../EditableAccordion';
 import { DraggableItem } from '../DraggableItem';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { useEditableContent } from '@/hooks/useEditableContent';
 import { useAppContext } from '@/context/AppContext';
-import { addItem, removeItem, updateItem } from '@/utils/sections/sectionItem';
-import { getDataFromActiveTab, isExtension } from '@/lib/chromeApi';
+import { addItem, addItems, updateItem } from '@/utils/sections/sectionItem';
+import { getDataFromActiveTab, getOpenTabs, isExtension, openUrls } from '@/lib/chromeApi';
+import { useRemoveWithUndo } from '@/hooks/useRemoveWithUndo';
+import { IconButton } from '../IconButton';
+import { CollectionIcon, ExternalLinkIcon } from '@heroicons/react/solid';
+import { toast } from '../ui/use-toast';
 import { DuplicatedAlertModal } from '../DuplicatedAlertModal';
 
 interface Props {
@@ -65,10 +69,38 @@ export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection }) 
     setSections(newSections);
   };
 
-  const onRemoveItem = (itemId: string) => {
-    const newSections = removeItem(sections, section.id, itemId);
+  const { removeItem } = useRemoveWithUndo();
+  const links = section.items.map((item) => item.url).filter(Boolean);
 
-    setSections(newSections);
+  const onRemoveItem = (itemId: string) => {
+    removeItem(section.id, itemId);
+  };
+
+  const onOpenAllLinks = (event: MouseEvent) => {
+    // Keep the section open or closed
+    event.preventDefault();
+    openUrls(links);
+  };
+
+  const onSaveOpenTabs = async (event: MouseEvent) => {
+    event.preventDefault();
+
+    const tabs = await getOpenTabs();
+    const { sections: newSections, addedCount } = addItems(
+      sections,
+      section.id,
+      tabs.map(({ url, title, icon }) => ({ url, name: title, icon })),
+    );
+
+    if (addedCount) {
+      setSections(newSections);
+    }
+
+    toast({
+      title: addedCount
+        ? `Saved ${addedCount} ${addedCount === 1 ? 'tab' : 'tabs'} to "${section.name}"`
+        : `All open tabs are already in "${section.name}"`,
+    });
   };
 
   const onRenameItem = (itemId: string, value: string) => {
@@ -98,6 +130,29 @@ export const Section: FC<Props> = ({ section, onChangeTitle, onRemoveSection }) 
       onChangeTitle={(value) => onChangeTitle(section.id, value)}
       onRemove={() => onRemoveSection(section.id)}
       onAdd={startAddNewItem}
+      actions={
+        <>
+          {isExtension() ? (
+            <IconButton
+              title="Save open tabs"
+              aria-label="Save open tabs"
+              onClick={onSaveOpenTabs}
+            >
+              <CollectionIcon className="h-3 w-3" />
+            </IconButton>
+          ) : null}
+
+          {links.length ? (
+            <IconButton
+              title="Open all links"
+              aria-label="Open all links"
+              onClick={onOpenAllLinks}
+            >
+              <ExternalLinkIcon className="h-3 w-3" />
+            </IconButton>
+          ) : null}
+        </>
+      }
     >
       <Droppable droppableId={section.id}>
         {(provided) => (

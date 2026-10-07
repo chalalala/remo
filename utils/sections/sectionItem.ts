@@ -38,7 +38,21 @@ export const reorderItems = (sections: Section[], dropResult: DropResult) => {
   return modifiedSections;
 };
 
-export const addItem = async (sections: Section[], sectionId: string, name: string) => {
+export interface LinkData {
+  url: string;
+  icon?: string;
+}
+
+/**
+ * Adds a new item at the top of a section.
+ * @param link - The link to save. When omitted, the extension uses the active tab.
+ */
+export const addItem = async (
+  sections: Section[],
+  sectionId: string,
+  name: string,
+  link?: LinkData,
+) => {
   const sectionIdx = sections.findIndex((section) => section.id === sectionId);
 
   if (sectionIdx === -1) {
@@ -60,7 +74,10 @@ export const addItem = async (sections: Section[], sectionId: string, name: stri
     url: '',
   };
 
-  if (isExtension()) {
+  if (link) {
+    newItem.url = link.url;
+    newItem.icon = link.icon || (await getFaviconFromURL(link.url));
+  } else if (isExtension()) {
     const { url, icon } = await getDataFromActiveTab();
 
     newItem.url = url;
@@ -75,6 +92,60 @@ export const addItem = async (sections: Section[], sectionId: string, name: stri
   });
 
   return newSections;
+};
+
+/**
+ * Adds several links at the top of a section in their original order,
+ * skipping links the section already has and duplicates within the list.
+ * @returns The new sections and how many links were added.
+ */
+export const addItems = (
+  sections: Section[],
+  sectionId: string,
+  links: (LinkData & { name: string })[],
+) => {
+  const sectionIdx = sections.findIndex((section) => section.id === sectionId);
+
+  if (sectionIdx === -1) {
+    return { sections, addedCount: 0 };
+  }
+
+  const items = sections[sectionIdx].items;
+  const savedUrls = new Set(items.map((item) => item.url));
+  const usedIds = new Set(items.map((item) => item.id));
+  const newItems: SectionItem[] = [];
+
+  for (const link of links) {
+    if (!link.url || savedUrls.has(link.url)) {
+      continue;
+    }
+
+    let id = `item_${generateId()}`;
+
+    // Generate a new ID if the ID already exists
+    while (usedIds.has(id)) {
+      id = `item_${generateId()}`;
+    }
+
+    savedUrls.add(link.url);
+    usedIds.add(id);
+    newItems.push({
+      id,
+      name: link.name || link.url,
+      url: link.url,
+      icon: link.icon || getFallbackFavicon(link.url),
+    });
+  }
+
+  if (!newItems.length) {
+    return { sections, addedCount: 0 };
+  }
+
+  const newSections: Section[] = JSON.parse(JSON.stringify(sections));
+
+  newSections[sectionIdx].items = [...newItems, ...newSections[sectionIdx].items];
+
+  return { sections: newSections, addedCount: newItems.length };
 };
 
 export const removeItem = (sections: Section[], sectionId: string, itemId: string) => {
@@ -131,5 +202,9 @@ export const getFaviconFromURL = async (url: string) => {
     return selfHostedFavicon;
   }
 
+  return getFallbackFavicon(url);
+};
+
+export const getFallbackFavicon = (url: string) => {
   return `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=32`;
 };
