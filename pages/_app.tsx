@@ -5,6 +5,7 @@ import { AppContextProvider } from '@/context/AppContext';
 import Head from 'next/head';
 import '../styles/globals.css';
 import ErrorBoundary from '@/components/ErrorBoundary/ErrorBoundary';
+import { Toaster } from '@/components/ui/toaster';
 
 export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -35,6 +36,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <AppContextProvider>
           <Component {...pageProps} />
         </AppContextProvider>
+        <Toaster />
       </ErrorBoundary>
     </>,
   );

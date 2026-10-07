@@ -4,8 +4,8 @@ import { setCookie } from '@/utils/cookies';
 import Script from 'next/script';
 import { FC, useCallback } from 'react';
 
-const SCOPE =
-  'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.readonly';
+// Only covers files Remo creates itself. Keep in sync with oauth2.scopes in public/manifest.json
+const SCOPE = 'https://www.googleapis.com/auth/drive.file';
 
 export const GoogleApiScript: FC = () => {
   const { setGoogleAuth, setAccessToken } = useAppContext();

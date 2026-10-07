@@ -14,6 +14,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 
@@ -31,6 +32,8 @@ interface AppContextValue {
 
   // Actions
   setSections: (sections: Section[]) => void;
+  // Applies a change to the latest spaces, safe to call from callbacks created earlier (e.g. undo)
+  updateSpaces: (updater: (spaces: Space[]) => Space[]) => void;
   setGoogleAuth: Dispatch<SetStateAction<GoogleAuth | undefined>>;
   setAccessToken: Dispatch<SetStateAction<string>>;
   setSelectedSpaceId: Dispatch<SetStateAction<string>>;
@@ -44,6 +47,9 @@ export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const { spaces, error, isLoading, mutate } = useRemoteData(accessToken);
   const [selectedSpaceId, setSelectedSpaceId] = useState<string>('');
   const [localStorageData, setLocalStorageData] = useState<Space[]>([]);
+  const latestSpaces = useRef(spaces);
+
+  latestSpaces.current = spaces;
 
   const selectedSpace = useMemo(() => {
     if (isLoading) {
@@ -75,6 +81,13 @@ export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
       mutate(newSpaces);
     },
     [spaces, selectedSpace, isLoading, mutate],
+  );
+
+  const updateSpaces = useCallback(
+    (updater: (spaces: Space[]) => Space[]) => {
+      mutate(updater(latestSpaces.current));
+    },
+    [mutate],
   );
 
   useEffect(() => {
@@ -124,6 +137,7 @@ export const AppContextProvider: FC<PropsWithChildren> = ({ children }) => {
 
     // Actions
     setSections,
+    updateSpaces,
     setGoogleAuth,
     setAccessToken,
     setSelectedSpaceId,

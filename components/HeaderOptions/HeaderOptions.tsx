@@ -46,7 +46,11 @@ export const HeaderOptions: FC = () => {
         onOpenChange={setOpen}
       >
         <DropdownMenuTrigger asChild>
-          <IconButton className="h-6 w-6 shrink-0">
+          <IconButton
+            className="h-6 w-6 shrink-0"
+            title="More options"
+            aria-label="More options"
+          >
             <DotsVerticalIcon />
           </IconButton>
         </DropdownMenuTrigger>
